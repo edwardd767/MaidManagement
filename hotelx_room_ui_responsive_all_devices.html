@@ -1,0 +1,3958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HotelX - Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Material+Symbols+Rounded:FILL@0..1&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#efefef;
+      --panel:#ffffff;
+      --line:#d9d9d9;
+      --text:#111;
+      --muted:#6d6d6d;
+      --orange:#f79334;
+      --orange-dark:#f47e2a;
+      --orange-light:#ffbe4e;
+      --selected:#e8e8e8;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family:'Nunito', Arial, sans-serif;
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    .app{
+      height:100vh;
+      display:grid;
+      grid-template-columns:242px 1fr;
+      grid-template-rows:58px 1fr;
+      grid-template-areas:
+        "top top"
+        "side main";
+    }
+
+    .material-symbols-rounded{
+      font-variation-settings:'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height:1;
+      user-select:none;
+    }
+
+    .topbar{
+      grid-area:top;
+      background:#ececec;
+      border-bottom:1px solid #cfcfcf;
+      box-shadow:0 1px 4px rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:0 22px;
+      position:relative;
+      z-index:5;
+    }
+
+    .hamburger{
+      font-size:28px;
+      color:#444;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .brand{
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    .sidebar{
+      grid-area:side;
+      background:#fff;
+      border-right:1px solid #dadada;
+      position:relative;
+      padding:10px 10px 14px 10px;
+      overflow:hidden;
+    }
+
+    .nav{
+      list-style:none;
+      margin:0;
+      padding:0 16px 0 0;
+    }
+
+    .nav-item{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-height:46px;
+      padding:10px 12px;
+      border-radius:0;
+      margin:2px 0;
+      position:relative;
+      font-weight:700;
+      font-size:17px;
+      color:#171717;
+      line-height:1.05;
+    }
+
+    .nav-item .icon{
+      width:18px;
+      display:inline-flex;
+      justify-content:center;
+      font-size:20px;
+      flex:none;
+    }
+
+
+    .nav-item.strike .icon,
+    .nav-item.strike span:not(.badge){
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+    }
+
+
+    .nav-item .icon.custom-side-icon{
+      width:22px;
+      height:22px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .nav-item .icon.custom-side-icon img{
+      width:22px;
+      height:22px;
+      object-fit:contain;
+      display:block;
+    }
+
+    .nav-item.selected{
+      background:#efefef;
+    }
+
+    .nav-item.outlined{
+      border:1.5px solid #f1a24a;
+      color:#f29235;
+      border-radius:2px;
+      margin-top:8px;
+      background:#fff9f3;
+    }
+
+    .nav-item .badge{
+      position:absolute;
+      left:164px;
+      top:8px;
+      background:#ff1f5d;
+      color:#fff;
+      width:21px;
+      height:21px;
+      border-radius:50%;
+      font-size:12px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 1px 2px rgba(0,0,0,.15);
+    }
+
+    .sidebar-scroll-track{
+      position:absolute;
+      top:6px;
+      right:2px;
+      width:8px;
+      height:796px;
+      background:transparent;
+      border-radius:10px;
+    }
+
+    .sidebar-scroll-thumb{
+      position:absolute;
+      top:174px;
+      left:0;
+      width:8px;
+      height:566px;
+      background:#7c7c7c;
+      border-radius:8px;
+    }
+
+    .sidebar-top-arrow,
+    .sidebar-bottom-arrow{
+      position:absolute;
+      right:0;
+      color:#7a7a7a;
+      font-size:16px;
+    }
+
+    .sidebar-top-arrow{ top:2px; }
+    .sidebar-bottom-arrow{ bottom:6px; }
+
+    .main{
+      grid-area:main;
+      overflow:auto;
+      padding:24px 18px 20px 24px;
+      background:#efefef;
+    }
+
+    .hero{
+      position:relative;
+      height:70px;
+      background:linear-gradient(90deg, #f89a35 0%, #f7a33d 56%, #f79235 100%);
+      border:1px solid #f18f37;
+      box-shadow:0 1px 3px rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+
+    .hero::before,
+    .hero::after{
+      content:"";
+      position:absolute;
+      top:-30px;
+      border-radius:50%;
+      opacity:.65;
+      pointer-events:none;
+    }
+
+    .hero::before{
+      width:480px;
+      height:180px;
+      left:410px;
+      background:#ffd354;
+      transform:rotate(-13deg);
+      opacity:.85;
+    }
+
+    .hero::after{
+      width:540px;
+      height:220px;
+      left:260px;
+      background:#ef6e2d;
+      transform:rotate(18deg);
+      opacity:.45;
+    }
+
+    .hero-top{
+      position:relative;
+      z-index:2;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:9px 12px 7px 10px;
+      height:48px;
+    }
+
+    .back-box{
+      width:28px;
+      height:28px;
+      background:#fff4ea;
+      border-radius:2px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#f49839;
+      margin-top:1px;
+      flex:none;
+      box-shadow:0 0 0 1px rgba(255,255,255,.4) inset;
+    }
+
+    .hero-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+      margin-top:1px;
+    }
+
+    .hero-kicker{
+      font-size:13px;
+      font-weight:800;
+      color:#fffefb;
+    }
+
+    .hero-title{
+      font-size:25px;
+      font-weight:800;
+      color:#111;
+      margin-top:1px;
+    }
+
+    .hero-sync{
+      margin-left:auto;
+      width:22px;
+      height:22px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#f39c3e;
+      font-size:14px;
+      margin-top:2px;
+    }
+
+    .hero-bottom{
+      position:relative;
+      z-index:2;
+      height:22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      background:#f57f29;
+      border-top:1px solid rgba(111,46,0,.25);
+      font-size:12px;
+      font-weight:700;
+      color:#252525;
+    }
+
+    .toolbar{
+      margin-top:7px;
+      height:39px;
+      background:#fff;
+      border:1px solid #dfdfdf;
+      box-shadow:0 1px 3px rgba(0,0,0,.12);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px 0 14px;
+    }
+
+    .toolbar-title{
+      font-size:16px;
+      font-weight:800;
+      color:#1a1a1a;
+    }
+
+    .toolbar-title .count{ color:#e37b26; }
+
+    .toolbar .search{
+      font-size:31px;
+      color:#191919;
+    }
+
+    .room-list{
+      margin-top:14px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      padding-bottom:40px;
+    }
+
+    .room-card{
+      height:62px;
+      background:#fff;
+      border:1px solid #dddddd;
+      box-shadow:0 1px 3px rgba(0,0,0,.16);
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      padding:0 12px;
+    }
+
+    .room-pill{
+      width:87px;
+      height:35px;
+      border-radius:3px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:14px;
+      font-weight:800;
+      color:#000;
+      margin-right:12px;
+      flex:none;
+    }
+
+    .pill-lightgreen{ background:#53d1b3; }
+    .pill-pink{ background:#f684a7; }
+    .pill-green{ background:#008123; color:#000; }
+
+    .room-info{ display:flex; flex-direction:column; justify-content:center; gap:2px; }
+    .room-level{ font-size:14px; font-weight:800; line-height:1; }
+    .room-meta{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-size:14px;
+      font-weight:800;
+      color:#111;
+      line-height:1;
+    }
+
+    .room-meta .person{
+      font-size:14px;
+      color:#1f3e99;
+      transform:translateY(-1px);
+    }
+
+    .room-menu{
+      margin-left:auto;
+      color:#111;
+      font-size:27px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .fab{
+      position:fixed;
+      right:18px;
+      bottom:13px;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      background:#ffa02b;
+      color:#fff;
+      box-shadow:0 5px 12px rgba(0,0,0,.28);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:44px;
+      line-height:1;
+      border:none;
+      cursor:pointer;
+      z-index:20;
+      font-weight:300;
+    }
+
+
+    .room-menu{
+      cursor:pointer;
+      width:36px;
+      height:36px;
+      border-radius:50%;
+    }
+
+    .room-action-menu{
+      position:fixed;
+      width:138px;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 3px 12px rgba(0,0,0,.28);
+      z-index:999;
+      display:none;
+      padding:8px 0;
+      font-size:17px;
+      color:#333;
+    }
+
+    .room-action-menu.active{
+      display:block;
+    }
+
+    .room-action-menu .menu-option{
+      padding:9px 18px;
+      cursor:pointer;
+      white-space:nowrap;
+      font-weight:600;
+    }
+
+    .room-action-menu .menu-option:hover{
+      background:#f2f2f2;
+    }
+
+
+    .qr-modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.12);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:1200;
+      padding:20px;
+    }
+
+    .qr-modal-overlay.active{
+      display:flex;
+    }
+
+    .qr-modal{
+      width:805px;
+      max-width:calc(100vw - 40px);
+      background:#f3f3f3;
+      border:1px solid #9a9a9a;
+      box-shadow:0 4px 14px rgba(0,0,0,.28);
+      position:relative;
+      padding:28px 26px 18px;
+    }
+
+    .qr-modal-topline{
+      height:28px;
+      border-top:2px solid #8a8a8a;
+      background:#ebe4d9;
+      margin-bottom:8px;
+    }
+
+    .qr-modal-title{
+      text-align:center;
+      font-size:24px;
+      font-weight:800;
+      color:#121212;
+      text-shadow:0 1px 3px rgba(0,0,0,.25);
+      margin:8px 0 18px;
+    }
+
+    .qr-modal-body{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .qr-image-wrap{
+      width:250px;
+      height:250px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fff;
+    }
+
+    .qr-image-wrap img{
+      width:230px;
+      height:230px;
+      object-fit:contain;
+      image-rendering:pixelated;
+    }
+
+    .qr-room-text{
+      margin-top:18px;
+      font-size:22px;
+      color:#4a4a4a;
+      font-weight:600;
+    }
+
+    .qr-modal-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:12px;
+      margin-top:28px;
+      padding-right:14px;
+    }
+
+    .qr-btn{
+      min-width:88px;
+      height:40px;
+      border:none;
+      border-radius:6px;
+      background:#f8a30d;
+      color:#fff;
+      font-size:17px;
+      font-weight:800;
+      box-shadow:0 2px 3px rgba(0,0,0,.18);
+      cursor:pointer;
+      font-family:'Nunito', Arial, sans-serif;
+      padding:0 18px;
+    }
+
+    .qr-btn:hover{
+      filter:brightness(.98);
+    }
+
+    @media print{
+      body.print-qr .app,
+      body.print-qr .fab,
+      body.print-qr .room-action-menu{
+        display:none !important;
+      }
+
+      body.print-qr .qr-modal-overlay{
+        display:flex !important;
+        position:static;
+        background:#fff;
+        padding:0;
+      }
+
+      body.print-qr .qr-modal{
+        width:100%;
+        max-width:none;
+        box-shadow:none;
+        border:none;
+      }
+
+      body.print-qr .qr-btn{
+        display:none;
+      }
+    }
+
+
+
+    #hotelSettingsMenu{
+      cursor:pointer;
+    }
+
+    .nav-item.maid-management{
+      cursor:pointer;
+      border:1.5px solid #f1a24a;
+      color:#f29235;
+      border-radius:4px;
+      margin:5px 0 5px 0;
+      background:#fff7ef;
+    }
+
+    .nav-item.maid-management.active{
+      background:#fff3e4;
+      border-color:#ff8f22;
+      color:#ff8f22;
+      box-shadow:0 1px 4px rgba(0,0,0,.12);
+    }
+
+    .page-screen{
+      display:none;
+    }
+
+    .page-screen.active{
+      display:block;
+    }
+
+    .maid-hero{
+      position:relative;
+      height:58px;
+      background:linear-gradient(90deg, #ff9e2e 0%, #ff8b25 45%, #ff7b29 100%);
+      border:1px solid #f18f37;
+      box-shadow:0 1px 3px rgba(0,0,0,.18);
+      overflow:hidden;
+      padding:9px 18px;
+      margin-bottom:18px;
+    }
+
+    .maid-hero::before,
+    .maid-hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .maid-hero::before{
+      width:560px;
+      height:170px;
+      left:310px;
+      top:-70px;
+      background:#ffd555;
+      opacity:.78;
+    }
+
+    .maid-hero::after{
+      width:640px;
+      height:170px;
+      left:140px;
+      top:-58px;
+      background:#f26523;
+      opacity:.55;
+    }
+
+    .maid-hero-content{
+      position:relative;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      height:100%;
+    }
+
+    .maid-hero-kicker{
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+      line-height:1;
+    }
+
+    .maid-hero-title{
+      font-size:20px;
+      font-weight:800;
+      color:#111;
+      line-height:1.1;
+      margin-top:4px;
+      padding-bottom:8px;
+      border-bottom:1px solid rgba(255,255,255,.9);
+      letter-spacing:.3px;
+    }
+
+    .maid-hero-subtitle{
+      font-size:16px;
+      font-weight:800;
+      color:#1d1d1d;
+      line-height:1;
+      margin-top:8px;
+    }
+
+    .maid-hero-sync{
+      position:absolute;
+      right:16px;
+      top:18px;
+      z-index:3;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#f39c3e;
+      box-shadow:0 2px 6px rgba(0,0,0,.22);
+    }
+
+    .maid-menu-panel{
+      background:transparent;
+      margin-top:8px;
+      max-width:100%;
+    }
+
+    .maid-card{
+      height:62px;
+      background:#fff;
+      border:1px solid #ddd;
+      border-radius:8px;
+      box-shadow:0 3px 9px rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      padding:0 12px;
+      margin:0 8px 4px 8px;
+      cursor:pointer;
+    }
+
+    .maid-card:hover{
+      background:#fffdf9;
+    }
+
+    .maid-card-icon{
+      width:87px;
+      height:35px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      margin-right:12px;
+      flex:none;
+    }
+
+    .maid-card-title{
+      font-size:16px;
+      font-weight:800;
+      color:#0c0c0c;
+      line-height:1;
+    }
+
+
+    .maid-card-icon.custom-maid-icon{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .maid-card-icon.custom-maid-icon img{
+      width:34px;
+      height:34px;
+      object-fit:contain;
+      display:block;
+    }
+
+    .maid-card-arrow{
+      margin-left:auto;
+      font-size:28px;
+      color:#1d1d1d;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+    }
+
+    @media (max-width: 900px){
+      .maid-card-title{ font-size:15px; }
+      .maid-card{ height:62px; padding:0 12px; }
+      .maid-card-icon{ width:70px; height:35px; font-size:22px; margin-right:10px; }
+    }
+
+
+    .profile-hero{
+      position:relative;
+      height:72px;
+      background:linear-gradient(90deg, #ff982e 0%, #ff8a25 45%, #ff7a2a 100%);
+      border:1px solid #f18f37;
+      box-shadow:0 1px 3px rgba(0,0,0,.18);
+      overflow:hidden;
+      margin-bottom:7px;
+    }
+
+    .profile-hero::before,
+    .profile-hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .profile-hero::before{
+      width:560px;
+      height:170px;
+      left:300px;
+      top:-72px;
+      background:#ffd555;
+      opacity:.78;
+    }
+
+    .profile-hero::after{
+      width:640px;
+      height:170px;
+      left:130px;
+      top:-58px;
+      background:#f26523;
+      opacity:.55;
+    }
+
+    .profile-hero-top{
+      position:relative;
+      z-index:2;
+      height:50px;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:9px 12px 6px 10px;
+    }
+
+    .profile-hero-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+
+    .profile-hero-kicker{
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .profile-hero-title{
+      font-size:20px;
+      font-weight:800;
+      color:#111;
+      margin-top:3px;
+      letter-spacing:.2px;
+    }
+
+    .profile-hero-sync{
+      margin-left:auto;
+      width:22px;
+      height:22px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#f39c3e;
+      font-size:14px;
+      margin-top:2px;
+      box-shadow:0 2px 5px rgba(0,0,0,.2);
+    }
+
+    .profile-hero-bottom{
+      position:relative;
+      z-index:2;
+      height:22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      background:#f57f29;
+      border-top:1px solid rgba(111,46,0,.25);
+      font-size:15px;
+      font-weight:800;
+      color:#151515;
+    }
+
+    .profile-toolbar{
+      height:55px;
+      background:#fff;
+      border:1px solid #dfdfdf;
+      box-shadow:0 1px 3px rgba(0,0,0,.12);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 24px 0 12px;
+      margin-bottom:14px;
+    }
+
+    .profile-toolbar-title{
+      font-size:18px;
+      font-weight:800;
+      color:#111;
+    }
+
+    .profile-toolbar-title .count{
+      color:#f58220;
+    }
+
+    .profile-list{
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+      padding-bottom:50px;
+    }
+
+    .profile-card{
+      min-height:82px;
+      background:#fff;
+      border:1px solid #dddddd;
+      box-shadow:0 1px 3px rgba(0,0,0,.16);
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      padding:0 16px 0 20px;
+    }
+
+    .profile-info{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      line-height:1.15;
+    }
+
+    .profile-name{
+      font-size:18px;
+      font-weight:800;
+      color:#0b0b0b;
+    }
+
+    .profile-modified{
+      font-size:16px;
+      font-weight:700;
+      color:#333;
+    }
+
+    .profile-date{
+      color:#ff8a00;
+      font-weight:800;
+      margin-left:4px;
+    }
+
+    .profile-menu{
+      margin-left:auto;
+      color:#111;
+      font-size:27px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:36px;
+      height:36px;
+      cursor:pointer;
+    }
+
+
+    .profile-new-hero{
+      position:relative;
+      height:92px;
+      background:linear-gradient(90deg, #ff982e 0%, #ff8a25 45%, #ff7a2a 100%);
+      border:1px solid #f18f37;
+      box-shadow:0 1px 3px rgba(0,0,0,.18);
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+
+    .profile-new-hero::before,
+    .profile-new-hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .profile-new-hero::before{
+      width:540px;
+      height:160px;
+      left:300px;
+      top:-70px;
+      background:#ffd555;
+      opacity:.78;
+    }
+
+    .profile-new-hero::after{
+      width:620px;
+      height:170px;
+      left:110px;
+      top:-60px;
+      background:#f26523;
+      opacity:.55;
+    }
+
+    .profile-new-hero-top{
+      position:relative;
+      z-index:2;
+      height:58px;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:10px 16px 6px 10px;
+      border-bottom:1px solid rgba(255,255,255,.85);
+    }
+
+    .close-box{
+      width:40px;
+      height:40px;
+      background:#fff4ea;
+      border-radius:3px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#f49839;
+      flex:none;
+      cursor:pointer;
+      box-shadow:0 0 0 1px rgba(255,255,255,.4) inset;
+    }
+
+    .close-box .material-symbols-rounded{
+      font-size:32px;
+    }
+
+    .profile-new-hero-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+
+    .profile-new-hero-kicker{
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+      margin-top:2px;
+    }
+
+    .profile-new-hero-title{
+      font-size:20px;
+      font-weight:800;
+      color:#111;
+      margin-top:5px;
+      letter-spacing:.2px;
+    }
+
+    .profile-new-hero-bottom{
+      position:relative;
+      z-index:2;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 18px;
+      background:rgba(245,127,41,.65);
+      font-size:15px;
+      font-weight:800;
+      color:#151515;
+    }
+
+    .profile-new-form-card{
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 2px 8px rgba(0,0,0,.16);
+      border:1px solid #e0e0e0;
+      padding:38px 28px 18px;
+      width:100%;
+      max-width:100%;
+      min-height:180px;
+    }
+
+    .maid-input-group{
+      margin-bottom:32px;
+      width:100%;
+    }
+
+    .maid-input{
+      width:100%;
+      border:none;
+      border-bottom:1px solid #9e9e9e;
+      outline:none;
+      font-family:'Nunito', Arial, sans-serif;
+      font-size:24px;
+      font-weight:600;
+      color:#333;
+      padding:0 0 7px 0;
+      background:transparent;
+    }
+
+    .maid-input::placeholder{
+      color:#8c929a;
+      opacity:1;
+    }
+
+    .new-profile-savebar{
+      position:fixed;
+      left:242px;
+      right:0;
+      bottom:0;
+      height:68px;
+      background:#fff;
+      box-shadow:0 -2px 8px rgba(0,0,0,.12);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:10;
+    }
+
+    .new-profile-savebar.active{
+      display:flex;
+    }
+
+    .save-btn{
+      width:180px;
+      height:43px;
+      border:none;
+      border-radius:6px;
+      background:#ddd;
+      color:#999;
+      font-family:'Nunito', Arial, sans-serif;
+      font-size:20px;
+      font-weight:700;
+      cursor:not-allowed;
+    }
+
+    .fab.hidden{
+      display:none;
+    }
+
+    @media (max-width: 1200px){
+      .new-profile-savebar{
+        left:220px;
+      }
+    }
+
+
+    .productivity-hero{
+      position:relative;
+      height:72px;
+      background:linear-gradient(90deg, #ff982e 0%, #ff8a25 45%, #ff7a2a 100%);
+      border:1px solid #f18f37;
+      box-shadow:0 1px 3px rgba(0,0,0,.18);
+      overflow:hidden;
+      margin-bottom:7px;
+    }
+
+    .productivity-hero::before,
+    .productivity-hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .productivity-hero::before{
+      width:560px;
+      height:170px;
+      left:300px;
+      top:-72px;
+      background:#ffd555;
+      opacity:.78;
+    }
+
+    .productivity-hero::after{
+      width:640px;
+      height:170px;
+      left:130px;
+      top:-58px;
+      background:#f26523;
+      opacity:.55;
+    }
+
+    .productivity-hero-top{
+      position:relative;
+      z-index:2;
+      height:50px;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:9px 12px 6px 10px;
+    }
+
+    .productivity-hero-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+
+    .productivity-hero-kicker{
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .productivity-hero-title{
+      font-size:20px;
+      font-weight:800;
+      color:#111;
+      margin-top:3px;
+      letter-spacing:.2px;
+    }
+
+    .productivity-hero-sync{
+      margin-left:auto;
+      width:22px;
+      height:22px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#f39c3e;
+      font-size:14px;
+      margin-top:2px;
+      box-shadow:0 2px 5px rgba(0,0,0,.2);
+    }
+
+    .productivity-hero-bottom{
+      position:relative;
+      z-index:2;
+      height:22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      background:#f57f29;
+      border-top:1px solid rgba(111,46,0,.25);
+      font-size:15px;
+      font-weight:800;
+      color:#151515;
+    }
+
+    .productivity-toolbar{
+      height:55px;
+      background:#fff;
+      border:1px solid #dfdfdf;
+      box-shadow:0 1px 3px rgba(0,0,0,.12);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 18px 0 12px;
+      margin-bottom:14px;
+    }
+
+    .productivity-toolbar-title{
+      font-size:18px;
+      font-weight:800;
+      color:#111;
+    }
+
+    .productivity-toolbar-title .count{
+      color:#f58220;
+    }
+
+    .productivity-toolbar-actions{
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+
+    .productivity-filter{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      color:#333;
+      border:2px solid transparent;
+    }
+
+    .productivity-filter:hover{
+      background:#f5f5f5;
+      border-color:#e6e6e6;
+    }
+
+    .productivity-list{
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+      padding-bottom:70px;
+    }
+
+    .productivity-card{
+      background:#fff;
+      border:1px solid #dddddd;
+      box-shadow:0 1px 3px rgba(0,0,0,.16);
+      border-radius:6px;
+      overflow:hidden;
+    }
+
+    .productivity-main-row{
+      min-height:78px;
+      display:grid;
+      grid-template-columns:1fr 145px 48px;
+      align-items:center;
+      padding:0 10px 0 20px;
+    }
+
+    .productivity-maid-name{
+      font-size:18px;
+      font-weight:800;
+      color:#0b0b0b;
+      line-height:1.2;
+    }
+
+    .productivity-updated{
+      font-size:15px;
+      font-weight:700;
+      color:#555;
+      margin-top:5px;
+    }
+
+    .productivity-summary{
+      text-align:left;
+      font-size:15px;
+      font-weight:800;
+      color:#333;
+      line-height:1.8;
+    }
+
+    .productivity-hours{
+      color:#ff4e76;
+      font-weight:800;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    .productivity-clock{
+      color:#ff4e76;
+      font-size:16px;
+    }
+
+    .productivity-expand{
+      width:38px;
+      height:38px;
+      border:none;
+      background:transparent;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      color:#111;
+    }
+
+    .productivity-expand .material-symbols-rounded{
+      font-size:32px;
+      transition:transform .18s ease;
+    }
+
+    .productivity-card.expanded .productivity-expand .material-symbols-rounded{
+      transform:rotate(180deg);
+    }
+
+    .productivity-details{
+      display:none;
+      border-top:1px solid #d8d8d8;
+      background:#fff;
+    }
+
+    .productivity-card.expanded .productivity-details{
+      display:block;
+    }
+
+    .room-cleaned-row{
+      min-height:58px;
+      display:grid;
+      grid-template-columns:1fr 120px;
+      align-items:center;
+      padding:0 20px;
+      border-bottom:1px solid #d8d8d8;
+      font-size:16px;
+      font-weight:800;
+      color:#111;
+    }
+
+    .room-cleaned-row:last-child{
+      border-bottom:none;
+    }
+
+    .room-duration{
+      justify-self:end;
+      color:#ff4e76;
+      font-size:14px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .advanced-search-panel{
+      position:fixed;
+      top:92px;
+      right:32px;
+      width:610px;
+      max-width:calc(100vw - 320px);
+      background:#fff;
+      border-right:2px solid #8c7a70;
+      box-shadow:0 3px 14px rgba(0,0,0,.22);
+      z-index:1100;
+      display:none;
+      padding-bottom:22px;
+    }
+
+    .advanced-search-panel.active{
+      display:block;
+    }
+
+    .advanced-search-header{
+      background:#f7efe5;
+      height:58px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 14px;
+      border-bottom:1px solid #f1e4d5;
+    }
+
+    .advanced-search-title{
+      color:#ff8a00;
+      font-size:16px;
+      font-weight:800;
+    }
+
+    .reset-btn{
+      height:32px;
+      min-width:82px;
+      border:1px solid #ff9d28;
+      background:#fff;
+      color:#ff8a00;
+      border-radius:3px;
+      font-size:13px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      font-family:'Nunito', Arial, sans-serif;
+      cursor:pointer;
+    }
+
+    .advanced-search-body{
+      padding:18px 12px 0;
+    }
+
+    .date-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:26px;
+      margin-bottom:26px;
+    }
+
+    .filter-field{
+      border-bottom:1px solid #bdbdbd;
+      min-height:42px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      padding-bottom:6px;
+      color:#777;
+    }
+
+    .filter-field-content{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .filter-label{
+      font-size:12px;
+      color:#8c8c8c;
+      font-weight:600;
+    }
+
+    .filter-value{
+      font-size:16px;
+      color:#333;
+      font-weight:700;
+    }
+
+    .filter-icon{
+      color:#777;
+      font-size:22px;
+    }
+
+    .select-field{
+      min-height:50px;
+      border-bottom:1px solid #bdbdbd;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:14px;
+      padding-bottom:3px;
+      color:#777;
+      font-size:19px;
+      font-weight:600;
+    }
+
+    .advanced-search-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      padding:16px 12px 0;
+    }
+
+    .filter-action-btn{
+      height:32px;
+      min-width:76px;
+      border:none;
+      border-radius:4px;
+      background:#ff9500;
+      color:#fff;
+      font-family:'Nunito', Arial, sans-serif;
+      font-size:13px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 1px 3px rgba(0,0,0,.16);
+    }
+
+    @media (max-width: 900px){
+      .advanced-search-panel{
+        right:16px;
+        left:16px;
+        width:auto;
+        max-width:none;
+      }
+
+      .productivity-main-row{
+        grid-template-columns:1fr 110px 40px;
+        padding-left:14px;
+      }
+    }
+
+
+    .cleaning-flow-hero{
+      position:relative;
+      height:72px;
+      background:linear-gradient(90deg, #ff982e 0%, #ff8a25 45%, #ff7a2a 100%);
+      border:1px solid #f18f37;
+      box-shadow:0 1px 3px rgba(0,0,0,.18);
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+
+    .cleaning-flow-hero::before,
+    .cleaning-flow-hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .cleaning-flow-hero::before{
+      width:560px;
+      height:170px;
+      left:300px;
+      top:-72px;
+      background:#ffd555;
+      opacity:.78;
+    }
+
+    .cleaning-flow-hero::after{
+      width:640px;
+      height:170px;
+      left:130px;
+      top:-58px;
+      background:#f26523;
+      opacity:.55;
+    }
+
+    .cleaning-flow-hero-top{
+      position:relative;
+      z-index:2;
+      height:50px;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:9px 12px 6px 10px;
+    }
+
+    .cleaning-flow-hero-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+
+    .cleaning-flow-hero-kicker{
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .cleaning-flow-hero-title{
+      font-size:20px;
+      font-weight:800;
+      color:#111;
+      margin-top:3px;
+      letter-spacing:.2px;
+    }
+
+    .cleaning-flow-hero-bottom{
+      position:relative;
+      z-index:2;
+      height:22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      background:#f57f29;
+      border-top:1px solid rgba(111,46,0,.25);
+      font-size:15px;
+      font-weight:800;
+      color:#151515;
+    }
+
+    .flow-stage{
+      display:none;
+    }
+
+    .flow-stage.active{
+      display:block;
+    }
+
+    .flow-card{
+      background:#fff;
+      border:1px solid #ddd;
+      border-radius:7px;
+      box-shadow:0 2px 8px rgba(0,0,0,.16);
+      padding:24px;
+      max-width:620px;
+      margin:0 auto 16px;
+    }
+
+    .flow-title{
+      font-size:24px;
+      font-weight:800;
+      color:#111;
+      margin-bottom:8px;
+      text-align:center;
+    }
+
+    .flow-subtitle{
+      font-size:16px;
+      font-weight:700;
+      color:#666;
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    .scan-box{
+      width:220px;
+      height:220px;
+      border:3px dashed #ff972b;
+      border-radius:14px;
+      background:#fff7ef;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 22px;
+      color:#ff8a00;
+      font-weight:800;
+    }
+
+    .scan-box .material-symbols-rounded{
+      font-size:86px;
+      margin-bottom:8px;
+    }
+
+    .flow-room-label{
+      text-align:center;
+      font-size:20px;
+      font-weight:800;
+      color:#333;
+      margin-bottom:20px;
+    }
+
+    .flow-input{
+      width:100%;
+      border:none;
+      border-bottom:1px solid #9e9e9e;
+      outline:none;
+      font-family:'Nunito', Arial, sans-serif;
+      font-size:22px;
+      font-weight:700;
+      color:#333;
+      padding:0 0 8px 0;
+      background:transparent;
+      margin-bottom:20px;
+    }
+
+    .flow-input::placeholder{
+      color:#8c929a;
+      opacity:1;
+    }
+
+    .flow-actions{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .flow-btn{
+      min-width:130px;
+      height:40px;
+      border:none;
+      border-radius:5px;
+      background:#ff9500;
+      color:#fff;
+      font-family:'Nunito', Arial, sans-serif;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 2px 4px rgba(0,0,0,.16);
+    }
+
+    .flow-btn.secondary{
+      background:#e0e0e0;
+      color:#555;
+    }
+
+    .flow-btn.danger{
+      background:#ff4e76;
+    }
+
+    .flow-status-strip{
+      max-width:620px;
+      margin:0 auto 14px;
+      background:#fff;
+      border-radius:7px;
+      box-shadow:0 2px 8px rgba(0,0,0,.12);
+      border-left:5px solid #ff9500;
+      padding:12px 16px;
+      font-size:15px;
+      font-weight:800;
+      color:#333;
+      display:none;
+    }
+
+    .flow-status-strip.active{
+      display:block;
+    }
+
+    .flow-status-strip span{
+      color:#ff8a00;
+    }
+
+    .cleaning-progress-box{
+      text-align:center;
+      padding:18px 0 4px;
+    }
+
+    .cleaning-progress-icon{
+      width:92px;
+      height:92px;
+      margin:0 auto 16px;
+      border-radius:50%;
+      background:#fff3e4;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ff8a00;
+    }
+
+    .cleaning-progress-icon .material-symbols-rounded{
+      font-size:54px;
+    }
+
+    .flow-note{
+      max-width:620px;
+      margin:0 auto;
+      background:#fff8ef;
+      border:1px solid #ffd2a0;
+      border-radius:6px;
+      padding:12px 16px;
+      font-size:14px;
+      color:#333;
+      font-weight:700;
+    }
+
+    .flow-note strong{
+      color:#ff8a00;
+    }
+
+    .flow-modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.18);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:1300;
+      padding:20px;
+    }
+
+    .flow-modal-overlay.active{
+      display:flex;
+    }
+
+    .flow-modal{
+      width:420px;
+      max-width:calc(100vw - 40px);
+      background:#fff;
+      border-radius:8px;
+      box-shadow:0 5px 18px rgba(0,0,0,.28);
+      overflow:hidden;
+    }
+
+    .flow-modal-header{
+      background:#ff9500;
+      color:#fff;
+      padding:14px 18px;
+      font-size:18px;
+      font-weight:800;
+    }
+
+    .flow-modal-body{
+      padding:22px 20px;
+      font-size:17px;
+      font-weight:700;
+      color:#333;
+      line-height:1.55;
+      text-align:center;
+    }
+
+    .flow-modal-body .time{
+      color:#ff8a00;
+      font-weight:800;
+    }
+
+    .flow-modal-actions{
+      padding:0 18px 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .flow-modal-btn{
+      min-width:110px;
+      height:38px;
+      border:none;
+      border-radius:5px;
+      background:#ff9500;
+      color:#fff;
+      font-family:'Nunito', Arial, sans-serif;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+
+    #digitalReportingMenu{
+      cursor:pointer;
+    }
+
+    .digital-reporting-hero{
+      position:relative;
+      height:75px;
+      background:linear-gradient(90deg, #f89a35 0%, #f7a33d 56%, #f79235 100%);
+      border:1px solid #f18f37;
+      box-shadow:0 1px 3px rgba(0,0,0,.18);
+      overflow:hidden;
+      margin-bottom:0;
+    }
+
+    .digital-reporting-hero::before,
+    .digital-reporting-hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .digital-reporting-hero::before{
+      width:560px;
+      height:170px;
+      left:430px;
+      top:-65px;
+      background:#ffd354;
+      opacity:.82;
+    }
+
+    .digital-reporting-hero::after{
+      width:620px;
+      height:190px;
+      left:280px;
+      top:-72px;
+      background:#ef6e2d;
+      opacity:.45;
+    }
+
+    .digital-reporting-hero-content{
+      position:relative;
+      z-index:2;
+      height:48px;
+      padding:12px 12px 0;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      border-bottom:1px solid rgba(255,255,255,.85);
+    }
+
+    .digital-reporting-kicker{
+      font-size:13px;
+      font-weight:800;
+      color:#fff;
+      line-height:1;
+    }
+
+    .digital-reporting-title{
+      font-size:16px;
+      font-weight:800;
+      color:#111;
+      margin-top:3px;
+      line-height:1.05;
+    }
+
+    .digital-reporting-sync{
+      position:absolute;
+      right:12px;
+      top:18px;
+      z-index:3;
+      width:22px;
+      height:22px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#f39c3e;
+      box-shadow:0 2px 5px rgba(0,0,0,.2);
+    }
+
+    .digital-reporting-hero-bottom{
+      position:relative;
+      z-index:2;
+      height:27px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      background:#f57f29;
+      font-size:12px;
+      font-weight:800;
+      color:#151515;
+    }
+
+    .report-filter-row{
+      height:40px;
+      display:grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap:8px;
+      margin-bottom:14px;
+    }
+
+    .report-search-box,
+    .report-category-box{
+      background:#fff;
+      border:1px solid #dfdfdf;
+      box-shadow:0 1px 3px rgba(0,0,0,.12);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      font-size:14px;
+      font-weight:800;
+      color:#111;
+    }
+
+    .report-search-box span:last-child,
+    .report-category-box span:last-child{
+      color:#111;
+    }
+
+    .digital-report-list{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      padding:0 6px 60px;
+    }
+
+    .digital-report-card{
+      min-height:64px;
+      background:#fff;
+      border:1px solid #dddddd;
+      border-radius:6px;
+      box-shadow:0 1px 3px rgba(0,0,0,.16);
+      padding:15px 14px 10px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .digital-report-card-title{
+      font-size:14px;
+      font-weight:800;
+      color:#111;
+      line-height:1.15;
+    }
+
+    .digital-report-card-desc{
+      font-size:13px;
+      font-weight:600;
+      color:#111;
+      margin-top:5px;
+      line-height:1.1;
+    }
+
+
+    .report-preview-hero{
+      position:relative;
+      height:75px;
+      background:linear-gradient(90deg, #f89a35 0%, #f7a33d 56%, #f79235 100%);
+      border:1px solid #f18f37;
+      box-shadow:0 1px 3px rgba(0,0,0,.18);
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+
+    .report-preview-hero::before,
+    .report-preview-hero::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .report-preview-hero::before{
+      width:560px;
+      height:170px;
+      left:430px;
+      top:-65px;
+      background:#ffd354;
+      opacity:.82;
+    }
+
+    .report-preview-hero::after{
+      width:620px;
+      height:190px;
+      left:280px;
+      top:-72px;
+      background:#ef6e2d;
+      opacity:.45;
+    }
+
+    .report-preview-top{
+      position:relative;
+      z-index:2;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:9px 12px 7px 10px;
+      height:48px;
+    }
+
+    .report-preview-text{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+      margin-top:1px;
+    }
+
+    .report-preview-kicker{
+      font-size:13px;
+      font-weight:800;
+      color:#fffefb;
+    }
+
+    .report-preview-title{
+      font-size:22px;
+      font-weight:800;
+      color:#111;
+      margin-top:1px;
+    }
+
+    .report-preview-bottom{
+      position:relative;
+      z-index:2;
+      height:27px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      background:#f57f29;
+      border-top:1px solid rgba(111,46,0,.25);
+      font-size:12px;
+      font-weight:800;
+      color:#252525;
+    }
+
+    .report-preview-wrap{
+      background:#e9e9e9;
+      padding:6px 6px 34px;
+    }
+
+    .report-sheet{
+      width:min(1160px, calc(100% - 20px));
+      margin:0 auto;
+      background:#fff;
+      border:1px solid #d7d7d7;
+      box-shadow:0 2px 8px rgba(0,0,0,.12);
+      padding:34px 20px 42px;
+      min-height:610px;
+    }
+
+    .report-sheet-header{
+      text-align:center;
+      margin-bottom:32px;
+      color:#000;
+    }
+
+    .report-sheet-hotel{
+      font-size:27px;
+      font-weight:400;
+      line-height:1.2;
+    }
+
+    .report-sheet-title{
+      font-size:29px;
+      font-weight:800;
+      line-height:1.15;
+      margin-top:2px;
+    }
+
+    .report-sheet-dates{
+      font-size:22px;
+      font-weight:400;
+      line-height:1.25;
+      margin-top:10px;
+    }
+
+    .report-data-table{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed;
+    }
+
+    .report-data-table th,
+    .report-data-table td{
+      border:1px solid #d0d0d0;
+      padding:8px 10px;
+      text-align:center;
+      color:#111;
+    }
+
+    .report-data-table th{
+      font-size:17px;
+      font-weight:400;
+      background:#fff;
+      white-space:nowrap;
+    }
+
+    .report-data-table td{
+      font-size:18px;
+      font-weight:400;
+    }
+
+    .report-data-table .col-date{ width:14%; }
+    .report-data-table .col-code{ width:14%; }
+    .report-data-table .col-name{ width:16%; }
+    .report-data-table .col-room{ width:10%; }
+    .report-data-table .col-status{ width:16%; }
+    .report-data-table .col-start{ width:12%; }
+    .report-data-table .col-end{ width:12%; }
+    .report-data-table .col-duration{ width:12%; }
+
+    @media (max-width: 1100px){
+      .report-sheet{ width:calc(100% - 8px); padding:24px 10px 24px; overflow-x:auto; }
+      .report-sheet-header{ min-width:980px; }
+      .report-data-table{ min-width:980px; }
+      .report-sheet-hotel{ font-size:22px; }
+      .report-sheet-title{ font-size:26px; }
+      .report-sheet-dates{ font-size:20px; }
+    }
+
+    .digital-report-card.strike-report .digital-report-card-title,
+    .digital-report-card.strike-report .digital-report-card-desc{
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+    }
+
+
+    .muted-orange{ color:#f29235; }
+    .icon-blue{ color:#5b86d7; }
+
+    @media (max-width: 1200px){
+      .hero-title{ font-size:22px; }
+      .nav-item{ font-size:15px; }
+      .app{ grid-template-columns:220px 1fr; }
+      .sidebar{ padding-right:4px; }
+    }
+  
+
+    .hamburger{
+      cursor:pointer;
+    }
+
+    .sidebar-overlay{
+      position:fixed;
+      inset:58px 0 0 0;
+      background:rgba(0,0,0,.28);
+      opacity:0;
+      visibility:hidden;
+      transition:opacity .22s ease, visibility .22s ease;
+      z-index:40;
+    }
+
+    .app.sidebar-open .sidebar-overlay{
+      opacity:1;
+      visibility:visible;
+    }
+
+    .main,
+    .sidebar,
+    .topbar,
+    .room-card,
+    .maid-card,
+    .profile-card,
+    .productivity-card,
+    .digital-report-card,
+    .flow-card,
+    .profile-new-form-card,
+    .report-sheet{
+      max-width:100%;
+    }
+
+    .report-preview-wrap,
+    .main{
+      overflow-x:hidden;
+    }
+
+    .report-sheet{
+      overflow-x:auto;
+    }
+
+    .report-sheet table{
+      min-width:920px;
+    }
+
+    @media (max-width: 1200px){
+      .app{
+        grid-template-columns:220px 1fr;
+      }
+
+      .main{
+        padding:18px 14px 18px 18px;
+      }
+
+      .hero-title,
+      .profile-hero-title,
+      .productivity-hero-title,
+      .report-preview-title{
+        font-size:22px;
+      }
+
+      .new-profile-savebar{
+        left:220px;
+      }
+    }
+
+    @media (max-width: 991px){
+      body{
+        overflow:hidden;
+      }
+
+      .app{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "top"
+          "main";
+      }
+
+      .topbar{
+        padding:0 16px;
+      }
+
+      .sidebar{
+        position:fixed;
+        top:58px;
+        left:0;
+        width:280px;
+        height:calc(100vh - 58px);
+        z-index:50;
+        overflow:auto;
+        transform:translateX(-100%);
+        transition:transform .25s ease;
+        box-shadow:2px 0 12px rgba(0,0,0,.18);
+      }
+
+      .app.sidebar-open .sidebar{
+        transform:translateX(0);
+      }
+
+      .sidebar-scroll-track,
+      .sidebar-top-arrow,
+      .sidebar-bottom-arrow{
+        display:none;
+      }
+
+      .main{
+        padding:14px 12px 18px;
+      }
+
+      .new-profile-savebar{
+        left:0;
+      }
+
+      .advanced-search-panel{
+        top:72px;
+        right:12px;
+        left:12px;
+        width:auto;
+        max-width:none;
+      }
+
+      .report-filter-row{
+        grid-template-columns:1fr;
+        height:auto;
+      }
+
+      .productivity-main-row{
+        grid-template-columns:1fr 120px 42px;
+      }
+
+      .room-cleaned-row{
+        grid-template-columns:1fr;
+        gap:6px;
+        padding:10px 14px;
+      }
+
+      .room-duration{
+        justify-self:start;
+      }
+
+      .report-sheet{
+        width:100%;
+        padding:24px 12px 28px;
+      }
+
+      .profile-new-form-card{
+        padding:28px 18px 12px;
+      }
+    }
+
+    @media (max-width: 768px){
+      .brand{
+        font-size:17px;
+      }
+
+      .nav-item{
+        font-size:16px;
+      }
+
+      .hero,
+      .profile-hero,
+      .productivity-hero,
+      .digital-reporting-hero,
+      .cleaning-flow-hero,
+      .report-preview-hero{
+        height:auto;
+      }
+
+      .hero-top,
+      .profile-hero-top,
+      .productivity-hero-top,
+      .cleaning-flow-hero-top,
+      .report-preview-top,
+      .digital-reporting-hero-content,
+      .profile-new-hero-top{
+        min-height:50px;
+      }
+
+      .hero-bottom,
+      .profile-hero-bottom,
+      .productivity-hero-bottom,
+      .cleaning-flow-hero-bottom,
+      .report-preview-bottom,
+      .digital-reporting-hero-bottom,
+      .profile-new-hero-bottom{
+        min-height:28px;
+        height:auto;
+        padding-top:4px;
+        padding-bottom:4px;
+        flex-wrap:wrap;
+        gap:6px;
+      }
+
+      .hero-title,
+      .profile-hero-title,
+      .productivity-hero-title,
+      .report-preview-title,
+      .digital-reporting-title,
+      .cleaning-flow-hero-title,
+      .profile-new-hero-title{
+        font-size:18px;
+      }
+
+      .toolbar,
+      .profile-toolbar,
+      .productivity-toolbar{
+        height:auto;
+        min-height:44px;
+        padding-top:8px;
+        padding-bottom:8px;
+        gap:10px;
+      }
+
+      .toolbar-title,
+      .profile-toolbar-title,
+      .productivity-toolbar-title{
+        font-size:15px;
+      }
+
+      .toolbar .search,
+      .profile-toolbar .search,
+      .productivity-toolbar .search{
+        font-size:28px;
+      }
+
+      .room-card{
+        min-height:62px;
+        height:auto;
+        padding:10px 12px;
+        align-items:flex-start;
+      }
+
+      .room-pill{
+        width:74px;
+        height:34px;
+        margin-right:10px;
+      }
+
+      .maid-card{
+        height:auto;
+        min-height:62px;
+        padding-top:10px;
+        padding-bottom:10px;
+      }
+
+      .maid-card-icon{
+        width:54px !important;
+        min-width:54px;
+      }
+
+      .maid-card-title{
+        font-size:15px !important;
+      }
+
+      .productivity-main-row{
+        grid-template-columns:1fr;
+        padding:12px 14px;
+        gap:8px;
+      }
+
+      .productivity-summary{
+        display:flex;
+        justify-content:space-between;
+        gap:12px;
+      }
+
+      .productivity-expand{
+        width:auto;
+        height:auto;
+        justify-content:flex-start;
+        padding:0;
+      }
+
+      .date-row{
+        grid-template-columns:1fr;
+        gap:16px;
+      }
+
+      .flow-card{
+        padding:18px 14px;
+      }
+
+      .flow-title{
+        font-size:20px;
+      }
+
+      .flow-subtitle,
+      .flow-note,
+      .flow-modal-body{
+        font-size:14px;
+      }
+
+      .flow-input{
+        font-size:18px;
+      }
+
+      .flow-actions{
+        flex-wrap:wrap;
+      }
+
+      .report-sheet-hotel{
+        font-size:20px;
+      }
+
+      .report-sheet-title{
+        font-size:24px;
+      }
+
+      .report-sheet-dates{
+        font-size:18px;
+      }
+
+      .fab{
+        width:54px;
+        height:54px;
+        right:14px;
+        bottom:14px;
+        font-size:38px;
+      }
+    }
+
+    @media (max-width: 560px){
+      .topbar{
+        gap:12px;
+        padding:0 12px;
+      }
+
+      .main{
+        padding:10px 8px 16px;
+      }
+
+      .nav{
+        padding-right:8px;
+      }
+
+      .nav-item{
+        gap:10px;
+        padding:10px 10px;
+      }
+
+      .nav-item .badge{
+        left:auto;
+        right:10px;
+      }
+
+      .back-box,
+      .close-box{
+        width:32px;
+        height:32px;
+      }
+
+      .hero-top,
+      .profile-hero-top,
+      .productivity-hero-top,
+      .cleaning-flow-hero-top,
+      .report-preview-top,
+      .profile-new-hero-top{
+        gap:8px;
+        padding:8px 10px 6px;
+      }
+
+      .digital-reporting-hero-content{
+        padding:10px 10px 0;
+      }
+
+      .hero-title,
+      .profile-hero-title,
+      .productivity-hero-title,
+      .report-preview-title,
+      .digital-reporting-title,
+      .cleaning-flow-hero-title,
+      .profile-new-hero-title{
+        font-size:16px;
+      }
+
+      .room-card{
+        gap:8px;
+      }
+
+      .room-pill{
+        width:66px;
+        height:32px;
+        font-size:13px;
+      }
+
+      .room-level,
+      .room-meta,
+      .profile-name,
+      .profile-modified,
+      .productivity-maid-name,
+      .productivity-updated{
+        font-size:13px;
+      }
+
+      .profile-card,
+      .digital-report-card,
+      .productivity-card{
+        min-height:auto;
+      }
+
+      .profile-card,
+      .digital-report-card{
+        padding:12px 12px;
+      }
+
+      .productivity-summary{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:2px;
+      }
+
+      .report-search-box,
+      .report-category-box{
+        min-height:42px;
+        font-size:13px;
+      }
+
+      .report-sheet{
+        padding:18px 8px 22px;
+      }
+
+      .report-sheet-hotel{
+        font-size:18px;
+      }
+
+      .report-sheet-title{
+        font-size:22px;
+      }
+
+      .report-sheet-dates{
+        font-size:16px;
+      }
+
+      .profile-new-form-card{
+        padding:22px 14px 8px;
+      }
+
+      .maid-input{
+        font-size:16px;
+      }
+
+      .save-btn{
+        width:160px;
+        height:40px;
+        font-size:18px;
+      }
+
+      .flow-modal{
+        width:100%;
+      }
+    }
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <span class="material-symbols-rounded hamburger" id="sidebarToggle">menu</span>
+      <div class="brand">HotelX</div>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar">
+      <ul class="nav">
+        <li class="nav-item"><span class="icon">🧑‍🍳</span><span>Housekeeping</span></li>
+        <li class="nav-item maid-management" id="maidManagementMenu"><span class="icon custom-side-icon"><img src="data:image/png;base64,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" alt="Maid Management Icon"></span><span>Maid Management</span></li>
+        <li class="nav-item strike"><span class="icon">🛎️</span><span>Room Service</span></li>
+        <li class="nav-item strike"><span class="icon">📋</span><span>Service Requests</span><span class="badge">2</span></li>
+        <li class="nav-item strike"><span class="icon">🎟️</span><span>Package<br>Redemption</span></li>
+        <li class="nav-item strike"><span class="icon">🏨</span><span>Corp/Govt</span></li>
+        <li class="nav-item strike"><span class="icon">🧑‍💼</span><span>Travel Agents</span></li>
+        <li class="nav-item selected strike"><span class="icon">🪪</span><span>Guest Profile</span></li>
+        <li class="nav-item strike"><span class="icon">📣</span><span>Digital Marketing</span></li>
+        <li class="nav-item strike"><span class="icon">💸</span><span>Checkout<br>Adjustment</span></li>
+        <li class="nav-item strike"><span class="icon">📊</span><span>Business Insights</span></li>
+        <li class="nav-item strike"><span class="icon">📑</span><span>Digital Document</span></li>
+        <li class="nav-item" id="digitalReportingMenu"><span class="icon">📊</span><span>Digital Reporting</span></li>
+        <li class="nav-item strike"><span class="icon">🧾</span><span>City Account</span></li>
+        <li class="nav-item strike"><span class="icon">💰</span><span>Account Journals</span></li>
+        <li class="nav-item outlined active" id="hotelSettingsMenu"><span class="icon">⚙️</span><span>Hotel Settings</span></li>
+        <li class="nav-item strike"><span class="icon icon-blue">⚙️</span><span>Common Settings</span></li>
+        <li class="nav-item"><span class="icon icon-blue">⚙️</span><span>System Admin</span></li>
+      </ul>
+      <span class="sidebar-top-arrow material-symbols-rounded">keyboard_arrow_up</span>
+      <div class="sidebar-scroll-track"><div class="sidebar-scroll-thumb"></div></div>
+      <span class="sidebar-bottom-arrow material-symbols-rounded">keyboard_arrow_down</span>
+    </aside>
+
+    <main class="main">
+      <div class="page-screen active" id="roomPage">
+      <section class="hero">
+        <div class="hero-top">
+          <div class="back-box"><span class="material-symbols-rounded">chevron_left</span></div>
+          <div class="hero-text">
+            <div class="hero-kicker">HMS</div>
+            <div class="hero-title">Bird of Paradise Hotel &amp; Resort</div>
+          </div>
+          <div class="hero-sync"><span class="material-symbols-rounded" style="font-size:14px;">sync</span></div>
+        </div>
+        <div class="hero-bottom">
+          <div>... / ... / ... / Room</div>
+          <div>STD</div>
+        </div>
+      </section>
+
+      <section class="toolbar">
+        <div class="toolbar-title">Room <span class="count">(18)</span></div>
+        <span class="material-symbols-rounded search">search</span>
+      </section>
+
+      <section class="room-list">
+        <div class="room-card" data-room="101">
+          <div class="room-pill pill-lightgreen">101</div>
+          <div class="room-info">
+            <div class="room-level">Level 1</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="102">
+          <div class="room-pill pill-pink">102</div>
+          <div class="room-info">
+            <div class="room-level">Level 1</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="103">
+          <div class="room-pill pill-green">103</div>
+          <div class="room-info">
+            <div class="room-level">Level 1</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="1101">
+          <div class="room-pill pill-green">1101</div>
+          <div class="room-info">
+            <div class="room-level">Level 11</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="1102">
+          <div class="room-pill pill-green">1102</div>
+          <div class="room-info">
+            <div class="room-level">Level 11</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="1103">
+          <div class="room-pill pill-pink">1103</div>
+          <div class="room-info">
+            <div class="room-level">Level 11</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="1201">
+          <div class="room-pill pill-pink">1201</div>
+          <div class="room-info">
+            <div class="room-level">Level 12</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="1202">
+          <div class="room-pill pill-green">1202</div>
+          <div class="room-info">
+            <div class="room-level">Level 12</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="1203">
+          <div class="room-pill pill-pink">1203</div>
+          <div class="room-info">
+            <div class="room-level">Level 12</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+
+        <div class="room-card" data-room="1301">
+          <div class="room-pill pill-green">1301</div>
+          <div class="room-info">
+            <div class="room-level">Level 13</div>
+            <div class="room-meta"><span class="person">🧍</span><span>4</span></div>
+          </div>
+          <div class="room-menu"><span class="material-symbols-rounded">more_vert</span></div>
+        </div>
+      </section>
+      </div>
+
+      <div class="page-screen" id="maidManagementPage">
+        <section class="maid-hero">
+          <div class="maid-hero-content">
+            <div class="maid-hero-kicker">HMS</div>
+            <div class="maid-hero-title">HOTEL PARADISE</div>
+            <div class="maid-hero-subtitle">Maid Management</div>
+          </div>
+          <div class="maid-hero-sync"><span class="material-symbols-rounded" style="font-size:18px;">sync</span></div>
+        </section>
+
+        <section class="maid-menu-panel">
+          <div class="maid-card" id="maidProfileCard">
+            <div class="maid-card-icon custom-maid-icon"><img src="data:image/png;base64,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" alt="Maid Profile Icon"></div>
+            <div class="maid-card-title">Maid Profile</div>
+            <div class="maid-card-arrow"><span class="material-symbols-rounded">chevron_right</span></div>
+          </div>
+
+          <div class="maid-card" id="maidProductivityCard">
+            <div class="maid-card-icon custom-maid-icon"><img src="data:image/png;base64,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" alt="Maid Productivity Icon"></div>
+            <div class="maid-card-title">Maid Productivity</div>
+            <div class="maid-card-arrow"><span class="material-symbols-rounded">chevron_right</span></div>
+          </div>
+
+          <div class="maid-card" id="maidCleaningFlowCard">
+            <div class="maid-card-icon">📱</div>
+            <div class="maid-card-title">Maid Cleaning Flow</div>
+            <div class="maid-card-arrow"><span class="material-symbols-rounded">chevron_right</span></div>
+          </div>
+
+        </section>
+      </div>
+
+      <div class="page-screen" id="maidProfilePage">
+        <section class="profile-hero">
+          <div class="profile-hero-top">
+            <div class="back-box" id="maidProfileBack"><span class="material-symbols-rounded">chevron_left</span></div>
+            <div class="profile-hero-text">
+              <div class="profile-hero-kicker">HMS</div>
+              <div class="profile-hero-title">HOTEL PARADISE</div>
+            </div>
+            <div class="profile-hero-sync"><span class="material-symbols-rounded" style="font-size:14px;">sync</span></div>
+          </div>
+          <div class="profile-hero-bottom">
+            <div>... / Maid Profile</div>
+            <div>Maid Profile</div>
+          </div>
+        </section>
+
+        <section class="profile-toolbar">
+          <div class="profile-toolbar-title">Maid Profile <span class="count">(1)</span></div>
+          <span class="material-symbols-rounded search">search</span>
+        </section>
+
+        <section class="profile-list">
+          <div class="profile-card">
+            <div class="profile-info">
+              <div class="profile-name">Maid Code: 101 | CASSANDRA</div>
+              <div class="profile-modified">Last Modified: <span class="profile-date">09 February 2021</span></div>
+            </div>
+            <div class="profile-menu"><span class="material-symbols-rounded">more_vert</span></div>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-info">
+              <div class="profile-name">Maid Code: 102 | EDWARD</div>
+              <div class="profile-modified">Last Modified: <span class="profile-date">09 February 2021</span></div>
+            </div>
+            <div class="profile-menu"><span class="material-symbols-rounded">more_vert</span></div>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-info">
+              <div class="profile-name">Maid Code: 201 | FIN HO</div>
+              <div class="profile-modified">Last Modified: <span class="profile-date">09 February 2021</span></div>
+            </div>
+            <div class="profile-menu"><span class="material-symbols-rounded">more_vert</span></div>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-info">
+              <div class="profile-name">Maid Code: 301 | JOANNE</div>
+              <div class="profile-modified">Last Modified: <span class="profile-date">09 February 2021</span></div>
+            </div>
+            <div class="profile-menu"><span class="material-symbols-rounded">more_vert</span></div>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-info">
+              <div class="profile-name">Maid Code: 401 | MARK GOH</div>
+              <div class="profile-modified">Last Modified: <span class="profile-date">09 February 2021</span></div>
+            </div>
+            <div class="profile-menu"><span class="material-symbols-rounded">more_vert</span></div>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-info">
+              <div class="profile-name">Maid Code: 222 | MICHELLE</div>
+              <div class="profile-modified">Last Modified: <span class="profile-date">09 February 2021</span></div>
+            </div>
+            <div class="profile-menu"><span class="material-symbols-rounded">more_vert</span></div>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-info">
+              <div class="profile-name">Maid Code: 333 | RAYMOND GOH</div>
+              <div class="profile-modified">Last Modified: <span class="profile-date">09 February 2021</span></div>
+            </div>
+            <div class="profile-menu"><span class="material-symbols-rounded">more_vert</span></div>
+          </div>
+        </section>
+      </div>
+
+
+      <div class="page-screen" id="maidProfileNewPage" style="padding-bottom:90px;">
+        <section class="profile-new-hero">
+          <div class="profile-new-hero-top">
+            <div class="close-box" id="newMaidProfileClose"><span class="material-symbols-rounded">close</span></div>
+            <div class="profile-new-hero-text">
+              <div class="profile-new-hero-kicker">HMS</div>
+              <div class="profile-new-hero-title">HOTEL PARADISE</div>
+            </div>
+          </div>
+          <div class="profile-new-hero-bottom">
+            <div>... / ... / ... / Maid Profile</div>
+            <div>New</div>
+          </div>
+        </section>
+
+        <section class="profile-new-form-card">
+          <div class="maid-input-group">
+            <input class="maid-input" type="text" placeholder="Maid Code *" />
+          </div>
+          <div class="maid-input-group">
+            <input class="maid-input" type="text" placeholder="Maid Name *" />
+          </div>
+        </section>
+      </div>
+
+
+      <div class="page-screen" id="maidProductivityPage">
+        <section class="productivity-hero">
+          <div class="productivity-hero-top">
+            <div class="back-box" id="maidProductivityBack"><span class="material-symbols-rounded">chevron_left</span></div>
+            <div class="productivity-hero-text">
+              <div class="productivity-hero-kicker">HMS</div>
+              <div class="productivity-hero-title">HOTEL PARADISE</div>
+            </div>
+            <div class="productivity-hero-sync"><span class="material-symbols-rounded" style="font-size:14px;">sync</span></div>
+          </div>
+          <div class="productivity-hero-bottom">
+            <div>... / Maid Productivity</div>
+            <div>Maid Productivity</div>
+          </div>
+        </section>
+
+        <section class="productivity-toolbar">
+          <div class="productivity-toolbar-title">Maid Productivity Listing <span class="count">(18)</span></div>
+          <div class="productivity-toolbar-actions">
+            <span class="material-symbols-rounded search">search</span>
+            <button class="productivity-filter" id="productivityFilterBtn" title="Advanced Search">
+              <span class="material-symbols-rounded">tune</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="productivity-list">
+          <div class="productivity-card">
+            <div class="productivity-main-row">
+              <div>
+                <div class="productivity-maid-name">Edward</div>
+                <div class="productivity-updated">Last updated on 25 Jan 2026, 09:01 AM</div>
+              </div>
+              <div class="productivity-summary">
+                <div><span class="productivity-hours">4 Hours <span class="material-symbols-rounded productivity-clock">schedule</span></span></div>
+                <div>10 Rooms</div>
+              </div>
+              <button class="productivity-expand" title="Expand">
+                <span class="material-symbols-rounded">keyboard_arrow_down</span>
+              </button>
+            </div>
+            <div class="productivity-details">
+              <div class="room-cleaned-row">
+                <div>Room No: 103&nbsp; | &nbsp;Start Time: 09:01 AM - End Time: 09:15 AM</div>
+                <div class="room-duration">20 mins <span class="material-symbols-rounded productivity-clock">schedule</span></div>
+              </div>
+              <div class="room-cleaned-row">
+                <div>Room No: 104&nbsp; | &nbsp;Start Time: 09:17 AM - End Time: 09:27 AM</div>
+                <div class="room-duration">10 mins <span class="material-symbols-rounded productivity-clock">schedule</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="productivity-card">
+            <div class="productivity-main-row">
+              <div>
+                <div class="productivity-maid-name">Azim</div>
+                <div class="productivity-updated">Last updated on 25 Jan 2026, 10:15 AM</div>
+              </div>
+              <div class="productivity-summary">
+                <div><span class="productivity-hours">2 Hours <span class="material-symbols-rounded productivity-clock">schedule</span></span></div>
+                <div>4 Rooms</div>
+              </div>
+              <button class="productivity-expand" title="Expand">
+                <span class="material-symbols-rounded">keyboard_arrow_down</span>
+              </button>
+            </div>
+            <div class="productivity-details">
+              <div class="room-cleaned-row">
+                <div>Room No: 201&nbsp; | &nbsp;Start Time: 10:15 AM - End Time: 10:35 AM</div>
+                <div class="room-duration">20 mins <span class="material-symbols-rounded productivity-clock">schedule</span></div>
+              </div>
+              <div class="room-cleaned-row">
+                <div>Room No: 202&nbsp; | &nbsp;Start Time: 10:40 AM - End Time: 10:55 AM</div>
+                <div class="room-duration">15 mins <span class="material-symbols-rounded productivity-clock">schedule</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="productivity-card">
+            <div class="productivity-main-row">
+              <div>
+                <div class="productivity-maid-name">Adam Firdaus</div>
+                <div class="productivity-updated">Last updated on</div>
+              </div>
+              <div class="productivity-summary">
+                <div><span class="productivity-hours">0 Hours <span class="material-symbols-rounded productivity-clock">schedule</span></span></div>
+                <div>0 Rooms</div>
+              </div>
+              <button class="productivity-expand" title="Expand">
+                <span class="material-symbols-rounded">keyboard_arrow_down</span>
+              </button>
+            </div>
+            <div class="productivity-details">
+              <div class="room-cleaned-row">
+                <div>No cleaned room records found.</div>
+                <div class="room-duration">0 mins <span class="material-symbols-rounded productivity-clock">schedule</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="advanced-search-panel" id="advancedSearchPanel">
+          <div class="advanced-search-header">
+            <div class="advanced-search-title">Advance Search</div>
+            <button class="reset-btn"><span class="material-symbols-rounded" style="font-size:16px;">refresh</span>Reset</button>
+          </div>
+          <div class="advanced-search-body">
+            <div class="date-row">
+              <div class="filter-field">
+                <div class="filter-field-content">
+                  <div class="filter-label">Start Date</div>
+                  <div class="filter-value">25/01/2026</div>
+                </div>
+                <span class="material-symbols-rounded filter-icon">calendar_month</span>
+              </div>
+              <div class="filter-field">
+                <div class="filter-field-content">
+                  <div class="filter-label">End Date</div>
+                  <div class="filter-value">25/01/2026</div>
+                </div>
+                <span class="material-symbols-rounded filter-icon">calendar_month</span>
+              </div>
+            </div>
+
+            <div class="select-field">
+              <span>Maid Code</span>
+              <span class="material-symbols-rounded">arrow_drop_down</span>
+            </div>
+
+            <div class="select-field">
+              <span>Maid Name</span>
+              <span class="material-symbols-rounded">arrow_drop_down</span>
+            </div>
+          </div>
+
+          <div class="advanced-search-actions">
+            <button class="filter-action-btn" id="advancedCancelBtn">Cancel</button>
+            <button class="filter-action-btn" id="advancedConfirmBtn">Confirm</button>
+          </div>
+        </aside>
+      </div>
+
+
+      <div class="page-screen" id="maidCleaningFlowPage">
+        <section class="cleaning-flow-hero">
+          <div class="cleaning-flow-hero-top">
+            <div class="back-box" id="maidCleaningFlowBack"><span class="material-symbols-rounded">chevron_left</span></div>
+            <div class="cleaning-flow-hero-text">
+              <div class="cleaning-flow-hero-kicker">HMS</div>
+              <div class="cleaning-flow-hero-title">HOTEL PARADISE</div>
+            </div>
+          </div>
+          <div class="cleaning-flow-hero-bottom">
+            <div>... / Maid Cleaning Flow</div>
+            <div>Room Cleaning</div>
+          </div>
+        </section>
+
+        <div class="flow-status-strip" id="flowStatusStrip">
+          Room No: <span id="flowStatusRoom">101</span> | Start Time: <span id="flowStatusStart">09:01 AM</span>
+        </div>
+
+        <section class="flow-stage active" id="flowStageScan">
+          <div class="flow-card">
+            <div class="flow-title">Scan Room QR Code</div>
+            <div class="flow-subtitle">Maid scans the unique room QR code to start cleaning.</div>
+            <div class="scan-box">
+              <span class="material-symbols-rounded">qr_code_scanner</span>
+              <div>Room QR Scan</div>
+            </div>
+            <div class="flow-room-label">Sample Room No: 101</div>
+            <div class="flow-actions">
+              <button class="flow-btn" id="simulateScanBtn">Scan QR Code</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="flow-stage" id="flowStageCode">
+          <div class="flow-card">
+            <div class="flow-title">Enter Maid Code</div>
+            <div class="flow-subtitle">System requires maid code confirmation before proceeding.</div>
+            <input class="flow-input" id="maidCodeInput" type="text" placeholder="Enter Maid Code *" value="101" />
+            <div class="flow-actions">
+              <button class="flow-btn secondary" id="backToScanBtn">Back</button>
+              <button class="flow-btn" id="confirmMaidCodeBtn">Confirm</button>
+            </div>
+          </div>
+          <div class="flow-note"><strong>Validation:</strong> Valid Maid Code will proceed. Invalid Maid Code will show error.</div>
+        </section>
+
+        <section class="flow-stage" id="flowStageCleaning">
+          <div class="flow-card">
+            <div class="flow-title">Cleaning In Progress</div>
+            <div class="flow-subtitle">Housekeeper cleans the room and scans the QR code again once completed.</div>
+            <div class="cleaning-progress-box">
+              <div class="cleaning-progress-icon"><span class="material-symbols-rounded">cleaning_services</span></div>
+              <div class="flow-room-label">Room No: 101</div>
+            </div>
+            <div class="flow-actions">
+              <button class="flow-btn" id="completeCleaningBtn">Scan QR Again Once Done</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="flow-stage" id="flowStageCompleted">
+          <div class="flow-card">
+            <div class="flow-title">Cleaning Completed</div>
+            <div class="flow-subtitle">System records the end time and duration.</div>
+            <div class="cleaning-progress-box">
+              <div class="cleaning-progress-icon"><span class="material-symbols-rounded">task_alt</span></div>
+              <div class="flow-room-label">Room No: 101 Cleaning Completed.</div>
+              <div class="flow-room-label">Duration: 10 Min</div>
+            </div>
+            <div class="flow-actions">
+              <button class="flow-btn" id="restartFlowBtn">Start New Scan</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+
+      <div class="page-screen" id="digitalReportingPage">
+        <section class="digital-reporting-hero">
+          <div class="digital-reporting-hero-content">
+            <div class="digital-reporting-kicker">HMS</div>
+            <div class="digital-reporting-title">Bird of Paradise Hotel &amp; Resort</div>
+          </div>
+          <div class="digital-reporting-sync"><span class="material-symbols-rounded" style="font-size:14px;">sync</span></div>
+          <div class="digital-reporting-hero-bottom">
+            <div>...</div>
+            <div>Digital Report</div>
+          </div>
+        </section>
+
+        <section class="report-filter-row">
+          <div class="report-search-box">
+            <span>Search here...</span>
+            <span class="material-symbols-rounded" style="font-size:28px;">search</span>
+          </div>
+          <div class="report-category-box">
+            <span>Housekeeping</span>
+            <span class="material-symbols-rounded">keyboard_arrow_down</span>
+          </div>
+        </section>
+
+        <section class="digital-report-list">
+          <div class="digital-report-card strike-report">
+            <div class="digital-report-card-title">Room Discrepancy Listing</div>
+            <div class="digital-report-card-desc">Description</div>
+          </div>
+
+          <div class="digital-report-card strike-report">
+            <div class="digital-report-card-title">Room Maintenance</div>
+            <div class="digital-report-card-desc">Description</div>
+          </div>
+
+          <div class="digital-report-card strike-report">
+            <div class="digital-report-card-title">Room Service Audit Log</div>
+            <div class="digital-report-card-desc">Description</div>
+          </div>
+
+          <div class="digital-report-card strike-report">
+            <div class="digital-report-card-title">Room Status</div>
+            <div class="digital-report-card-desc">Description</div>
+          </div>
+
+          <div class="digital-report-card" id="maidProductivityListingReportCard">
+            <div class="digital-report-card-title">Maid Productivity Listing</div>
+            <div class="digital-report-card-desc">Description</div>
+          </div>
+        </section>
+      </div>
+
+
+      <div class="page-screen" id="maidProductivityReportPage">
+        <section class="report-preview-hero">
+          <div class="report-preview-top">
+            <div class="back-box" id="maidProductivityReportBack"><span class="material-symbols-rounded">chevron_left</span></div>
+            <div class="report-preview-text">
+              <div class="report-preview-kicker">HMS</div>
+              <div class="report-preview-title">Bird of Paradise Hotel &amp; Resort</div>
+            </div>
+          </div>
+          <div class="report-preview-bottom">
+            <div>... / Maid Productivity Listing</div>
+            <div>Digital Report</div>
+          </div>
+        </section>
+
+        <section class="report-preview-wrap">
+          <div class="report-sheet">
+            <div class="report-sheet-header">
+              <div class="report-sheet-hotel">Bird of Paradise Hotel &amp; Resort</div>
+              <div class="report-sheet-title">Maid Productivity Listing</div>
+              <div class="report-sheet-dates">Start Date: 25/01/2026&nbsp;&nbsp;End Date: 25/01/2026</div>
+            </div>
+
+            <table class="report-data-table">
+              <thead>
+                <tr>
+                  <th class="col-date">Date</th>
+                  <th class="col-code">Maid Code</th>
+                  <th class="col-name">Maid Name</th>
+                  <th class="col-room">Room No</th>
+                  <th class="col-status">Cleaning Status</th>
+                  <th class="col-start">Start Time</th>
+                  <th class="col-end">End Time</th>
+                  <th class="col-duration">Duration</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>25/01/2026</td>
+                  <td>101</td>
+                  <td>Cassandra</td>
+                  <td>103</td>
+                  <td>Completed</td>
+                  <td>9:01 AM</td>
+                  <td>9:15 AM</td>
+                  <td>14 mins</td>
+                </tr>
+                <tr>
+                  <td>25/01/2026</td>
+                  <td>101</td>
+                  <td>Cassandra</td>
+                  <td>104</td>
+                  <td>Completed</td>
+                  <td>9:17 AM</td>
+                  <td>9:27 AM</td>
+                  <td>10 mins</td>
+                </tr>
+                <tr>
+                  <td>25/01/2026</td>
+                  <td>102</td>
+                  <td>Edward</td>
+                  <td>203</td>
+                  <td>Completed</td>
+                  <td>11:00 AM</td>
+                  <td>11:15 AM</td>
+                  <td>15 mins</td>
+                </tr>
+                <tr>
+                  <td>25/01/2026</td>
+                  <td>111</td>
+                  <td>GC Khor</td>
+                  <td>501</td>
+                  <td>Completed</td>
+                  <td>6:00 PM</td>
+                  <td>6:10 PM</td>
+                  <td>10 mins</td>
+                </tr>
+                <tr>
+                  <td>25/01/2026</td>
+                  <td>112</td>
+                  <td>GC Khor</td>
+                  <td>502</td>
+                  <td>In Progress</td>
+                  <td>6:20 PM</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <button class="fab" id="mainFab" aria-label="Add">+</button>
+
+  <div class="new-profile-savebar" id="newProfileSavebar">
+    <button class="save-btn" disabled>Save</button>
+  </div>
+
+
+
+
+
+  <div class="room-action-menu" id="roomActionMenu">
+    <div class="menu-option" data-action="edit">Edit</div>
+    <div class="menu-option" data-action="inactive">Inactive</div>
+    <div class="menu-option" data-action="hkmaidqr">HK Maid QR</div>
+  </div>
+
+  <div class="qr-modal-overlay" id="qrModalOverlay">
+    <div class="qr-modal" id="qrModal">
+      <div class="qr-modal-topline"></div>
+      <div class="qr-modal-title">For Housekeeping Use Only</div>
+      <div class="qr-modal-body" id="qrPrintArea">
+        <div class="qr-image-wrap"><img id="qrCodeImage" alt="HK Maid QR Code"></div>
+        <div class="qr-room-text">Room No: <span id="qrRoomNo">101</span></div>
+      </div>
+      <div class="qr-modal-actions">
+        <button class="qr-btn" id="shareQrBtn">Share</button>
+        <button class="qr-btn" id="closeQrBtn">Close</button>
+        <button class="qr-btn" id="printQrBtn">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const roomActionMenu = document.getElementById('roomActionMenu');
+    const qrModalOverlay = document.getElementById('qrModalOverlay');
+    const qrCodeImage = document.getElementById('qrCodeImage');
+    const qrRoomNo = document.getElementById('qrRoomNo');
+    const closeQrBtn = document.getElementById('closeQrBtn');
+    const printQrBtn = document.getElementById('printQrBtn');
+    const shareQrBtn = document.getElementById('shareQrBtn');
+
+    const qrMap = {
+      '101': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAAB+UlEQVR4nO2bQY7iMBBF359E6mW4QR/FuRlXi4/CDZIlkqM/CztA90gj0AjIqMs70Ft8qVT2r18gc+fJv+4lIdBAAw000ECfiaqdHo2sIkuCZft6fLqAQB9Bk217BrJ6YLA10tm2/RV9joBAH0GX1kKeBlvHuX0tqX+NgEDvOP23z4K+mOWAWV4hINB/QD2xCuis8S0CAv3L2XprMLAAySCGswC4nZ3frjXQhmZJ0gE0Lj2k04eBtVrCVwgI9J5Te+tb/GQ4q/XbswUE+vi8NS6qU5YnQDoALD3kwxrz1m7QiyfsipIBhoLz2GOWVU6nD+uZAgJ9AKUOwBOd7bkz0BkGmzS38ashb9caKFsxCjAUSC412qDWDVrSEdV6P7r11lCw5y1qSjMAnaO39ol2Jn8WpMPaRq1pOEvHeQ0Hvxv08m5B7ajLa/UH8natgTYHf6zv1lajdJKa87C3DGonWn8yenEZrVDVGKb5ajBKuIzdoDcZvAGUplJHLdIEuhrD92sNtN2El91x3UbmQ+eaZUBkGbtDr7vj5PNmAoey1e35AgJ9BL3uji9XX5ZEOkUGv1+0bUxcsOevXn53WgMlfxa2Jws0stZcfo9afxz6fXfsPNabT84jOCverf2g3P4Gjc7tEnThNt+IeWsfqOJfC4EGGmiggf5H6G8lZyJwHIAS2QAAAABJRU5ErkJggg==',
+      '102': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACAUlEQVR4nO2bTW6jQBBGXw3sGykH8FHgZtEcKTeAo+QAkehlJNA3iwJD4omELWEYTdXCbuG3+KRSdf1hExut+7WVhEADDTTQQAPdE7XJSujmM+T52JxJa6DUkqQegEJqAWsoJEn6iu4jINAtVk7fuYL6DQzASB+lyGBQDLsKCPQBby2WekS+fX681kBv0PrdDNKANccICPRnm2MoCchAdxFAIciw7p0P1xrohHolWAH1e4k1ucQaxrk63F9AoFvMY2sVQl3F7J70dSp1uNZA8Rq97gG8ZB/82aqglyS1h2sN1FH9rkDSAF01Ncv+g3qwZncBgd6LepJ67YvpAuwuA9akz8hbp0E9bxmp957Y+2RSv2K0p4BAH8hbnqgKQRpYpbE2KfLW+dDR5lvv6qN+9EvQmmcICHQ7msv5g9GsYTS6i2Svs8tOpPX/RdezDB9j5BJ58srlIChkewoI9AFv5QqgHKx+A0hDaTDaNOTdUUCgd1cZi0GSgMIrj+UUVcZp0GV3LPWgFvA0Viv6rfOg001YtwD5xdePRvrwtQkQ/db50Dy/flH3+CCezszoqicJCHSD3eyIu6pAHk+5QoDMI+9wrYH+BV36rWnI+2wBgf5k33fH8ojKLzJScV2l7Ccg0PvR6+7Y7DIA6dPUZjNrcuyOz4Na/Gsh0EADDTTQfwj9Aw9z6UvQenEuAAAAAElFTkSuQmCC',
+      '103': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACBklEQVR4nO2bQYrjMBBFX40NvbShD+CjWDfoM83NrKPkAA3yMmDzZyHJnc4wQxJw4mGqFiJO3uJD8aVSlWPixog/biXBUUcdddRRR/dErUQLzC1mPViY69dhdwGO3oOOkqQEFrqzSSczoJEk6Tu6jwBH70HnYiFNgFnf5BwVvz1BgKOPoNFaNLGaptcIcPTP0V49G91ny5jelycJcPSBbHUCZhAgoyvJurw7v1yrowWNZlYrwRbGU4sF1lwSPkOAo7dE9taXhQQLin1D8dveAhy9/74V5jYvOca0WvmB1b11GLR6a14NugXix2crAMU+IeZ+XwGOPnBuDQv6Wc8os0ECViP2YGF/AY7eFLldMQHQLUipUW1tlE/5cXq5Vke3Cj6RW4R053JQxdAA8/uiPQU4+sjteG1VisAVYp+ALqE4nM2zdRQ074SMWpASeWFMjaCrW6TvhAdBt3OrEaWDURq6kpZt8WwdAr3wVnZUcVlJGWMqYxPP1gHQYpwtrgrDC8SzdRT0a3Ysnd5EHM4GtbVhYXcBjt6DbrNjYDXGBPkY2wx2HK2ObrNjCzSyQCOimcFsdS55GK3/L3o9jcwdw9gnFD8SwFKRl2t19Bo1G5bL+VaY32ThiQIc/VvUCr40Bmvx3ogx4fetY6FcvoPGb/ctTbXU8GwdADX/14KjjjrqqKP/EPoLeFg8+lLaHXcAAAAASUVORK5CYII=',
+      '1101': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAAB9UlEQVR4nO2bQW7bMBBF/6+0pwEfoEchb1b0SL0BdZQcwIC4DEDhZ0HSsh2kUFLIYpGZlWm8xQcGw5n5tClsjOnHVhIw1FBDDTXU0D1R1hhBnoDyKaT2ddhdgKGfQb0kaQakF1IRCxUxSJJ0j+4jwNDPoKmV0HQC+GseSo5Ijs8RYOiGGB/OhLuMAjLo/zxDgKH/ijIAUDxOgKF/R51U05NquTEAkJSfI8DQ7ehEkjwB8POglrKljITPEGDoliiFdGs/uQxMP18JuHtX6nCthtZ9KwBgSGQrq0FrvTHsLsDQbbFuVIpOAlw7qozxg8o2Fg/Xaug1W4Pg55qjMlv4GaWNlbBs9YIqulxqi8FlrIMhALsJ+0Frbfl5kGK59TLKJwDNkrLa6gO98zLchUI6i14LhXTOBAD6uJ8AQ78ywdf7jz6+EhOvQDpn7SnA0K+4uiMAl4vfpOgyGMpxse24G/Rmgsd1Wl/HeOtbHaItI9UTVExkzVsawbC7AEM3Relb7bIbarq8ACKdy9H6Vmfo+nb8uz3yF8cQ1rc6Qq/7Fpr9DjzuW+Y89YI+vh0LAG72rel0acjhWg19jyYSE0cwYKFiGtsrcodavxvabsLStwatjmH1d+c2MdpNeDz68b5VfqEWAVjf6gWl/WvBUEMNNdTQ/wh9AyvZN8yFFJ2OAAAAAElFTkSuQmCC',
+      '1102': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACAElEQVR4nO2bTYrjMBBGX40NWdqQA+Qo8s2auZl1lD7AgLUMyHyzkJW4p2HIBJJoSNUiluy3+KAo1Y+IiRst/riVBEcdddRRRx19JGqb9diUeuqqvp4eLsDRm6wvjzADpCOCswGridRlAOyRAhy9A001hOII0tKVWtHM+ucIcPQO1D4+D7JpyNj0EgGO/sX676/WcvKJ9AwBjt7hrUFAAuK4ZSsA9r3zy7U6uqHRzMxGICxQCsOJtZSEzxDg6C1WYmsXQnHEFE+ZLd4eLcDRf0CRJBEkERaAQdp+qNsgSfPLtTpavKWZTjBkCMpo5lrGd+6t5tDhbJAOgnSQfShjE6sRForzGtL67qhNAEFnI44AaV/Zl6+taH1n9Eu/lUYUJ1Acu2zFb0OuNcjLtTq6VRnQSVLeslXYrbzKaAe9VPBrbauGsxHtAqRj9thqENU85N3KpiGj+erGlrS+KXo5CWvJHpZu328FVfOTsBV0c9k1tpJZSVmUGdSjBTh6k5W8VQ+7OtANAiMdy9bzVmNoOfAW0M9TxqZkVkPN81Y7aJ0TLlBS1ja86HZ5yyv4VtA/byMVT8KCVhPpmC2Ovyrycq2OfkPDpxnRtvstzan3OWEz6O7GRFrqQGMeLtvlMqZ/uVZHd/0W5Xak9lua6VTCyvNWI6j5vxYcddRRRx39j9DfrawuHQd8vUIAAAAASUVORK5CYII=',
+      '1103': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACBElEQVR4nO2bQYrjMBBFX40NvbRhDpCjyDfIkYa5mXWUHGDAWg7I/FlIdjoz0CQNTjR01UI48Vt8KEr6VcIm7oz47V4SHHXUUUcddfRI1Gr0QDKDVJ9KTIcLcPQRNEiSFjAbgXjKAJ0kSbfoMQIcfQRNtYQ0DxJhWQ2AWm9PEODoZ9Bw6TEbu3+dfXtavzxqNq6mGbDpJQIc/SC2fW4QkECk75lwKRsh7yvs5VodrWg0M7OxVpRNdALWYgmfIcDRe6LU1rWEFE+/DYaMbiurAa2O1n5rSn1ZIPVo3l7bxOq11QxKaam0dIIhQyhPkuah9mCFmF+u1VFq/zvk/Z9OW8pyrbLg2WoD3Txh6sspZQy/jDhiIr3JgsCOFODoJyZPSyfi5v/KxhhHeH+MtaL1C6PVE8axw4KAeN7fDUuxiDpSgKMPZ8uCQNG6bAydiOf9GEs9FubjBDj6uCecqQPdzQTm28VdRhNo9YRh6URY9hn8fk8Slnpt4tlqAN36rS0IysBNyjxbbaHXu2P9HIFw2S+Q2afxjWh19Hp3DOltM+9DhqDsDr45dLs7th/LarXfMjNIb7LpCQIcvSP6v36rlBWgeF4AMt5vtYraRCfiKWMTq9Xh/BMFOPpRbE6wDuJL51VdPd5vtYVuM/gSncpyNe9zsRqerSZQ868WHHXUUUcd/Y/QPyzBPB3a157HAAAAAElFTkSuQmCC',
+      '1201': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAAB/UlEQVR4nO2aQYrjMBBFX40NWdrQB8hR7BvMkfpq1lH6AAPWMiDzZ2HJcdLMkAw4EUzVwsjyW3wQVfxS2cSDEX48SoKjjjrqqKOOHolajhazflnXEMv2WJNWRxkkSTMAjTRRVpJ0ix4jwNFn0LilEGAjzXpGZta+RoCj/4CuCTbMy+7wXirA0SdQG6MZ4Zwo5fDFAhz9S5Q61wmIoHBOLcTTWgn3vfPbtTrK3kfQiGG+Psr2IEnT27U6uubWNYVE3Fbc3kq9XaujObcGpW0n20FNnXKCeW7ViJbjkWawzy8zwtn7rfrQ2KIptkCXsBHQ1CVKx3y8AEcfiZ3LGEpNlOZmq475QsMrYQVocRnxIxnxI4nYQxixdQWL6UgBjj5/qzt2FytFsJF9lrRikGTj4QIcfShydxyskRH71cGL2GN0FyMn2HECHH0eHXSx1ROGHsx6WC80Qt+4J6wOjS0QzdZzywZjMegulm8Mq9H6/6LoNrInVNpZRO+O60Kvs2OIJ5nZSSXfTl4Ja0Ovs+NwvpimLgFdgnBOd+gxAhx9Bt1mx8NXC7AYYf05w2fHVaNNbrDyxGSxVwtw9E/R3r2LuJjCTxCkFrpfBXm7VkfvZ8eEEYwOgEaE0SthPei32TGbwRjmZnP17uCrQL/PjvObgMT+69u1Ouqoo4466uhvq5kUoWuwKoYAAAAASUVORK5CYII=',
+      '1202': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAAB+0lEQVR4nO3bQYrjMBCF4b9Ghl4q0AfIUeyb5UxzA/soOcCAtAzYvFnIctyrTho80ZDSKlG+xQMjl6QiJh4c069HJTh16tSpU6dHUltHVyZtYDEbcp0eDg/g9BnaS5ISQO4AgjQSJEn6So8J4PQZmtclZHae0Zg71q91vTWU1ek2+rQYxBmNrwng9Ak6nYLMzOxVAZx+T6NUFlN/NbsvK0nzvwng9HE6mZnZCYAgu6QgG1hsv8payfrGtOwh9tdP8WaazjP6Ot1AVqeUPXqfAAiSUli/7uYkaXx5Vqd1bWWA+MdEvBlEARlE/sT68bgATn9Cg+6nLI0sxnSesSHevG61RqfTYjbEGSDIhtztzLpFbCXrG1PWqpSAPoWyja/79iCNUV63GqM2EMR0vhkQZGYfktJi9dejAzh9ji5Gf/2QXTRvdUuyS31kLWV9W1rrU5w7wXpvYcQE5G4WBNmRAZz+4GkBkE9A/pzpfxvAYhBTPSS/PKvTusuoo9wYlhNzaW2F8sl3Gc3Qe+9Yum7N4txBLz9vNUe33rENgMZspckFBO8dN0P394R9CiqNyF2fJMrfhO3SPt3PW3A/dLWY1Sm5290TMp38TdgO3c5b9dJ9Os/lvGXEsLVSjgvg9Pm6tY6gtVClepdbCprXrTao+b8WnDp16tTpf0T/AiySHSCnCG4uAAAAAElFTkSuQmCC',
+      '1203': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACCUlEQVR4nO2aQYrjMBBFX40MvVRgDtBHkW/WzM2so/QBBuxlg8KfhSTHmTCQDCQ2dGlh4vgtPhRVql+SiTtX/nEvCY466qijjjr6TNTaGrARIJsZLP3v8ekCHH0ETZKkGfTrdDaSCkCQJOkafY4ARx9Bl5ZC9vE5YHYKNUZmNrxGgKN3rOGvd+UTkKbzcNPa767V0Rs0qaAJsHEfAY7+e/XcigIWMAgij0EGsE2w3bU62tBsZmYnIM1gHzMA59oSvkKAo/esmluXFFJ+/7L6uM6sA2h1tPmtcRmAxYw0hzVIZ4Ole7CjaP3OKNVSTbHUBoM0g6TSHlM3XZp21+ro6rcGyN1b9alGUN3GxhcIcPSOVeNjSWDE3wP5vQxi+VnIBhC/vMs4DNorIUHSHGpN1ARI8zWyu1ZHW+1LAogFS/PaCsYyuN86FMpmbpvm0Ea7Ums6pDmoznw9t/ZHW5lbgwJRvRzWX/Ke8DBo6zIgQLZQgPMAEQysftMzBTj6MHoxWLC81b69ptrGLB9Eq6OXs+MaqGxvqh4M3G8dB21dRuqblyao/cZmG/N962Dosl6/iFI97r9czhhfIMDR/0HTZ6t/bU7YzfIRtX571Mb4VW/R2EiQjT6DPxB6u291vwUE91vHQrezDAhql9Ni6aONNZYerf3Rm7NjqAZLQGH7dXetjjrqqKOOOvoHAsZG+v9CWS0AAAAASUVORK5CYII=',
+      '1301': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACBElEQVR4nO2bQY7bMAxFH2sDXdpADpCjyDcreqTeQD5KD1DAWg4g43ch2ZNJN54UTlSUXNnJW3yAkPhJJiYOxvzlKAmOOuqoo446eiZqNXrMrIfZemxK28fT6QIc/QwaJEkLSHozYDVFOkmSPqLnCHD0M2jajtA8gn1bupKjctSeIcDRA9HfvRt8FZCx8OMZAhz9i2wBqwlApGcIcPQBdJAUy2MnmwCbAEn5OQIcPY7OZmY2AmEBSD3AWizhMwQ4eiTKTXgzfpqvGc3XN4Ph41Tq5VodpXj0IKkcq7B0gmH37UP9VvHlWh0t2VKk5khxS5RUbHzn2WoG3bI1SISlKy0yQZn3o1aRl2t1tDr48LPPKl1WzL1I4w1jIZ4nwNHHbkJp6epTuRhhG0n52WoDrS6jmom8m45c61aQu4x20M3Bpz6LNFKaq9l2IF2yzhTg6GOo2VWSlFEcJJuGjCKrd8fNoNtNCJSNSXHwe7/ldas99L142QQoJrNSskg9Np0uwNFDUerWdtl1mRCBIDDSpUx0vW41hr7vjr9vS34YMuB1qyF0s+wLdUQYFrjrt9zBt4LebyM1j122oNVEumSbx18b8nKtjv6BhmW1+psnVlNMPXVN2Z7W/w692ZiUydNu429e3cE3gt70W5TtyLLvTsrEELxutYKa/2vBUUcdddTRfwj9DZ0SawlYWeJoAAAAAElFTkSuQmCC'
+    };
+    let selectedRoomNo = '';
+
+
+    const maidManagementMenu = document.getElementById('maidManagementMenu');
+    const digitalReportingMenu = document.getElementById('digitalReportingMenu');
+    const digitalReportingPage = document.getElementById('digitalReportingPage');
+    const maidProductivityReportPage = document.getElementById('maidProductivityReportPage');
+    const maidProductivityListingReportCard = document.getElementById('maidProductivityListingReportCard');
+    const maidProductivityReportBack = document.getElementById('maidProductivityReportBack');
+    const roomPage = document.getElementById('roomPage');
+    const maidManagementPage = document.getElementById('maidManagementPage');
+    const maidProfilePage = document.getElementById('maidProfilePage');
+    const maidProfileNewPage = document.getElementById('maidProfileNewPage');
+    const maidProductivityPage = document.getElementById('maidProductivityPage');
+    const maidCleaningFlowPage = document.getElementById('maidCleaningFlowPage');
+    const maidCleaningFlowBack = document.getElementById('maidCleaningFlowBack');
+    const maidCleaningFlowCard = document.getElementById('maidCleaningFlowCard');
+    const flowStatusStrip = document.getElementById('flowStatusStrip');
+    const flowStageScan = document.getElementById('flowStageScan');
+    const flowStageCode = document.getElementById('flowStageCode');
+    const flowStageCleaning = document.getElementById('flowStageCleaning');
+    const flowStageCompleted = document.getElementById('flowStageCompleted');
+    const simulateScanBtn = document.getElementById('simulateScanBtn');
+    const backToScanBtn = document.getElementById('backToScanBtn');
+    const confirmMaidCodeBtn = document.getElementById('confirmMaidCodeBtn');
+    const completeCleaningBtn = document.getElementById('completeCleaningBtn');
+    const restartFlowBtn = document.getElementById('restartFlowBtn');
+    const maidCodeInput = document.getElementById('maidCodeInput');
+    const cleaningStartModal = document.getElementById('cleaningStartModal');
+    const cleaningCompletedModal = document.getElementById('cleaningCompletedModal');
+    const invalidMaidModal = document.getElementById('invalidMaidModal');
+    const startModalOkBtn = document.getElementById('startModalOkBtn');
+    const completedModalOkBtn = document.getElementById('completedModalOkBtn');
+    const invalidMaidOkBtn = document.getElementById('invalidMaidOkBtn');
+    const maidProductivityBack = document.getElementById('maidProductivityBack');
+    const productivityFilterBtn = document.getElementById('productivityFilterBtn');
+    const advancedSearchPanel = document.getElementById('advancedSearchPanel');
+    const advancedCancelBtn = document.getElementById('advancedCancelBtn');
+    const advancedConfirmBtn = document.getElementById('advancedConfirmBtn');
+    const maidProfileBack = document.getElementById('maidProfileBack');
+    const newMaidProfileClose = document.getElementById('newMaidProfileClose');
+    const mainFab = document.getElementById('mainFab');
+    const newProfileSavebar = document.getElementById('newProfileSavebar');
+
+    const hotelSettingsMenu = document.getElementById('hotelSettingsMenu');
+
+    function clearMainMenuActive(){
+      document.querySelectorAll('.nav-item').forEach(function(item){
+        item.classList.remove('active');
+      });
+    }
+
+
+    function hideAllScreens(){
+      if (roomPage) roomPage.classList.remove('active');
+      if (maidManagementPage) maidManagementPage.classList.remove('active');
+      if (maidProfilePage) maidProfilePage.classList.remove('active');
+      if (maidProfileNewPage) maidProfileNewPage.classList.remove('active');
+      if (maidProductivityPage) maidProductivityPage.classList.remove('active');
+      if (maidCleaningFlowPage) maidCleaningFlowPage.classList.remove('active');
+      if (digitalReportingPage) digitalReportingPage.classList.remove('active');
+      if (maidProductivityReportPage) maidProductivityReportPage.classList.remove('active');
+    }
+
+    function updatePageControls(){
+      const isMaidProfileListing = maidProfilePage && maidProfilePage.classList.contains('active');
+      const isNewProfile = maidProfileNewPage && maidProfileNewPage.classList.contains('active');
+
+      if (mainFab) {
+        mainFab.classList.toggle('hidden', !isMaidProfileListing);
+      }
+      if (newProfileSavebar) {
+        newProfileSavebar.classList.toggle('active', isNewProfile);
+      }
+    }
+
+    function openMaidProfileNewPage(){
+      hideAllScreens();
+      if (maidProfileNewPage) {
+        maidProfileNewPage.classList.add('active');
+      }
+      roomActionMenu.classList.remove('active');
+      qrModalOverlay.classList.remove('active');
+      if (advancedSearchPanel) advancedSearchPanel.classList.remove('active');
+      updatePageControls();
+    }
+
+    function openHotelSettingsPage(){
+      clearMainMenuActive();
+      if (hotelSettingsMenu) {
+        hotelSettingsMenu.classList.add('active');
+      }
+      hideAllScreens();
+      if (roomPage) {
+        roomPage.classList.add('active');
+      }
+      roomActionMenu.classList.remove('active');
+      qrModalOverlay.classList.remove('active');
+      if (advancedSearchPanel) advancedSearchPanel.classList.remove('active');
+      updatePageControls();
+    }
+
+    if (hotelSettingsMenu) {
+      hotelSettingsMenu.addEventListener('click', function(event){
+        event.stopPropagation();
+        openHotelSettingsPage();
+      });
+    }
+
+
+
+    function openDigitalReportingPage(){
+      clearMainMenuActive();
+      if (digitalReportingMenu) {
+        digitalReportingMenu.classList.add('active');
+      }
+      hideAllScreens();
+      if (digitalReportingPage) {
+        digitalReportingPage.classList.add('active');
+      }
+      roomActionMenu.classList.remove('active');
+      qrModalOverlay.classList.remove('active');
+      if (advancedSearchPanel) advancedSearchPanel.classList.remove('active');
+      updatePageControls();
+    }
+
+    if (digitalReportingMenu) {
+      digitalReportingMenu.addEventListener('click', function(event){
+        event.stopPropagation();
+        openDigitalReportingPage();
+      });
+    }
+
+
+    function openMaidProductivityReportPage(){
+      clearMainMenuActive();
+      if (digitalReportingMenu) {
+        digitalReportingMenu.classList.add('active');
+      }
+      hideAllScreens();
+      if (maidProductivityReportPage) {
+        maidProductivityReportPage.classList.add('active');
+      }
+      roomActionMenu.classList.remove('active');
+      qrModalOverlay.classList.remove('active');
+      if (advancedSearchPanel) advancedSearchPanel.classList.remove('active');
+      updatePageControls();
+    }
+
+    if (maidProductivityListingReportCard) {
+      maidProductivityListingReportCard.addEventListener('click', function(){
+        openMaidProductivityReportPage();
+      });
+    }
+
+    if (maidProductivityReportBack) {
+      maidProductivityReportBack.addEventListener('click', function(){
+        openDigitalReportingPage();
+      });
+    }
+
+    function openMaidManagementPage(){
+      clearMainMenuActive();
+      if (maidManagementMenu) {
+        maidManagementMenu.classList.add('active');
+      }
+      hideAllScreens();
+      if (maidManagementPage) {
+        maidManagementPage.classList.add('active');
+      }
+      roomActionMenu.classList.remove('active');
+      qrModalOverlay.classList.remove('active');
+      if (advancedSearchPanel) advancedSearchPanel.classList.remove('active');
+      updatePageControls();
+    }
+
+    if (maidManagementMenu) {
+      maidManagementMenu.addEventListener('click', function(event){
+        event.stopPropagation();
+        openMaidManagementPage();
+      });
+    }
+
+    document.getElementById('maidProfileCard')?.addEventListener('click', function(){
+      hideAllScreens();
+      if (maidProfilePage) {
+        maidProfilePage.classList.add('active');
+      }
+      roomActionMenu.classList.remove('active');
+      qrModalOverlay.classList.remove('active');
+      if (advancedSearchPanel) advancedSearchPanel.classList.remove('active');
+      updatePageControls();
+    });
+
+    if (maidProfileBack) {
+      maidProfileBack.addEventListener('click', function(){
+        openMaidManagementPage();
+      });
+    }
+
+
+    if (mainFab) {
+      mainFab.addEventListener('click', function(){
+        if (maidProfilePage && maidProfilePage.classList.contains('active')) {
+          openMaidProfileNewPage();
+        }
+      });
+    }
+
+    if (newMaidProfileClose) {
+      newMaidProfileClose.addEventListener('click', function(){
+        hideAllScreens();
+        if (maidProfilePage) {
+          maidProfilePage.classList.add('active');
+        }
+        updatePageControls();
+      });
+    }
+
+    document.getElementById('maidProductivityCard')?.addEventListener('click', function(){
+      hideAllScreens();
+      if (maidProductivityPage) {
+        maidProductivityPage.classList.add('active');
+      }
+      roomActionMenu.classList.remove('active');
+      qrModalOverlay.classList.remove('active');
+      if (advancedSearchPanel) advancedSearchPanel.classList.remove('active');
+      updatePageControls();
+    });
+
+    if (maidProductivityBack) {
+      maidProductivityBack.addEventListener('click', function(){
+        openMaidManagementPage();
+      });
+    }
+
+    if (productivityFilterBtn) {
+      productivityFilterBtn.addEventListener('click', function(event){
+        event.stopPropagation();
+        advancedSearchPanel.classList.toggle('active');
+      });
+    }
+
+    if (advancedCancelBtn) {
+      advancedCancelBtn.addEventListener('click', function(){
+        advancedSearchPanel.classList.remove('active');
+      });
+    }
+
+    if (advancedConfirmBtn) {
+      advancedConfirmBtn.addEventListener('click', function(){
+        advancedSearchPanel.classList.remove('active');
+      });
+    }
+
+    document.querySelectorAll('.productivity-expand').forEach(function(button){
+      button.addEventListener('click', function(event){
+        event.stopPropagation();
+        const card = button.closest('.productivity-card');
+        if (card) {
+          card.classList.toggle('expanded');
+        }
+      });
+    });
+
+
+
+    function showFlowStage(stage){
+      [flowStageScan, flowStageCode, flowStageCleaning, flowStageCompleted].forEach(function(item){
+        if (item) item.classList.remove('active');
+      });
+      if (stage) stage.classList.add('active');
+
+      if (flowStatusStrip) {
+        const showStatus = stage === flowStageCleaning || stage === flowStageCompleted;
+        flowStatusStrip.classList.toggle('active', showStatus);
+      }
+    }
+
+    function openCleaningFlowPage(){
+      hideAllScreens();
+      if (maidCleaningFlowPage) {
+        maidCleaningFlowPage.classList.add('active');
+      }
+      showFlowStage(flowStageScan);
+      if (advancedSearchPanel) advancedSearchPanel.classList.remove('active');
+      roomActionMenu.classList.remove('active');
+      qrModalOverlay.classList.remove('active');
+      updatePageControls();
+    }
+
+    if (maidCleaningFlowCard) {
+      maidCleaningFlowCard.addEventListener('click', function(){
+        openCleaningFlowPage();
+      });
+    }
+
+    if (maidCleaningFlowBack) {
+      maidCleaningFlowBack.addEventListener('click', function(){
+        openMaidManagementPage();
+      });
+    }
+
+    if (simulateScanBtn) {
+      simulateScanBtn.addEventListener('click', function(){
+        showFlowStage(flowStageCode);
+      });
+    }
+
+    if (backToScanBtn) {
+      backToScanBtn.addEventListener('click', function(){
+        showFlowStage(flowStageScan);
+      });
+    }
+
+    if (confirmMaidCodeBtn) {
+      confirmMaidCodeBtn.addEventListener('click', function(){
+        const maidCode = (maidCodeInput?.value || '').trim();
+        if (maidCode === '101' || maidCode === '102' || maidCode === '201' || maidCode === '301' || maidCode === '401') {
+          if (cleaningStartModal) cleaningStartModal.classList.add('active');
+        } else {
+          if (invalidMaidModal) invalidMaidModal.classList.add('active');
+        }
+      });
+    }
+
+    if (startModalOkBtn) {
+      startModalOkBtn.addEventListener('click', function(){
+        cleaningStartModal.classList.remove('active');
+        showFlowStage(flowStageCleaning);
+      });
+    }
+
+    if (invalidMaidOkBtn) {
+      invalidMaidOkBtn.addEventListener('click', function(){
+        invalidMaidModal.classList.remove('active');
+      });
+    }
+
+    if (completeCleaningBtn) {
+      completeCleaningBtn.addEventListener('click', function(){
+        if (cleaningCompletedModal) cleaningCompletedModal.classList.add('active');
+      });
+    }
+
+    if (completedModalOkBtn) {
+      completedModalOkBtn.addEventListener('click', function(){
+        cleaningCompletedModal.classList.remove('active');
+        showFlowStage(flowStageCompleted);
+      });
+    }
+
+    if (restartFlowBtn) {
+      restartFlowBtn.addEventListener('click', function(){
+        if (maidCodeInput) maidCodeInput.value = '101';
+        showFlowStage(flowStageScan);
+      });
+    }
+
+    document.querySelectorAll('.room-menu').forEach(function(menuButton) {
+      menuButton.addEventListener('click', function(event) {
+        event.stopPropagation();
+        const roomCard = menuButton.closest('.room-card');
+        selectedRoomNo = roomCard ? roomCard.getAttribute('data-room') : '';
+
+        const rect = menuButton.getBoundingClientRect();
+        const menuWidth = 138;
+        roomActionMenu.style.top = (rect.top - 8) + 'px';
+        roomActionMenu.style.left = (rect.right - menuWidth + 22) + 'px';
+        roomActionMenu.classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('#roomActionMenu .menu-option').forEach(function(option) {
+      option.addEventListener('click', function() {
+        const action = option.getAttribute('data-action');
+
+        if (action === 'hkmaidqr') {
+          const roomNo = selectedRoomNo || '101';
+          qrRoomNo.textContent = roomNo;
+          qrCodeImage.src = qrMap[roomNo] || qrMap['101'];
+          qrModalOverlay.classList.add('active');
+        } else if (action === 'edit') {
+          alert('Edit clicked for Room ' + (selectedRoomNo || ''));
+        } else if (action === 'inactive') {
+          alert('Inactive clicked for Room ' + (selectedRoomNo || ''));
+        }
+
+        roomActionMenu.classList.remove('active');
+      });
+    });
+
+    document.addEventListener('click', function(event) {
+      roomActionMenu.classList.remove('active');
+      if (
+        advancedSearchPanel &&
+        advancedSearchPanel.classList.contains('active') &&
+        !advancedSearchPanel.contains(event.target) &&
+        event.target !== productivityFilterBtn &&
+        !productivityFilterBtn?.contains(event.target)
+      ) {
+        advancedSearchPanel.classList.remove('active');
+      }
+    });
+
+    roomActionMenu.addEventListener('click', function(event) {
+      event.stopPropagation();
+    });
+
+    qrModalOverlay.addEventListener('click', function(event) {
+      if (event.target === qrModalOverlay) {
+        qrModalOverlay.classList.remove('active');
+      }
+    });
+
+    closeQrBtn.addEventListener('click', function() {
+      qrModalOverlay.classList.remove('active');
+    });
+
+    printQrBtn.addEventListener('click', function() {
+      document.body.classList.add('print-qr');
+      window.print();
+      setTimeout(function() {
+        document.body.classList.remove('print-qr');
+      }, 500);
+    });
+
+    shareQrBtn.addEventListener('click', async function() {
+      const text = 'Housekeeping QR for Room ' + qrRoomNo.textContent;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'HK Maid QR', text });
+        } catch (e) {}
+      } else if (navigator.clipboard) {
+        try {
+          await navigator.clipboard.writeText(text);
+          alert('Room QR details copied.');
+        } catch (e) {
+          alert(text);
+        }
+      } else {
+        alert(text);
+      }
+    });
+
+
+
+    const appShell = document.querySelector('.app');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function closeSidebarMobile(){
+      if (window.innerWidth <= 991 && appShell) {
+        appShell.classList.remove('sidebar-open');
+      }
+    }
+
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener('click', function(event){
+        event.stopPropagation();
+        if (window.innerWidth <= 991 && appShell) {
+          appShell.classList.toggle('sidebar-open');
+        }
+      });
+    }
+
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', function(){
+        closeSidebarMobile();
+      });
+    }
+
+    document.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        closeSidebarMobile();
+      });
+    });
+
+    window.addEventListener('resize', function(){
+      if (window.innerWidth > 991 && appShell) {
+        appShell.classList.remove('sidebar-open');
+      }
+    });
+
+    updatePageControls();
+  </script>
+
+
+  <div class="flow-modal-overlay" id="cleaningStartModal">
+    <div class="flow-modal">
+      <div class="flow-modal-header">System Pop-Up</div>
+      <div class="flow-modal-body">
+        “Please Proceed To Clean”<br>
+        Start Time: <span class="time">09:01 AM</span><br><br>
+        Reminder: Scan QR Again<br>
+        Once completed
+      </div>
+      <div class="flow-modal-actions">
+        <button class="flow-modal-btn" id="startModalOkBtn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-modal-overlay" id="cleaningCompletedModal">
+    <div class="flow-modal">
+      <div class="flow-modal-header">System Pop-Up</div>
+      <div class="flow-modal-body">
+        Room No: 101 Cleaning Completed.<br>
+        Duration: <span class="time">10 Min</span>
+      </div>
+      <div class="flow-modal-actions">
+        <button class="flow-modal-btn" id="completedModalOkBtn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-modal-overlay" id="invalidMaidModal">
+    <div class="flow-modal">
+      <div class="flow-modal-header">System Validation</div>
+      <div class="flow-modal-body">
+        Invalid Maid Code.<br>
+        Please enter a valid Maid Code to proceed.
+      </div>
+      <div class="flow-modal-actions">
+        <button class="flow-modal-btn" id="invalidMaidOkBtn">OK</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    /* Fix: bind cleaning flow buttons after the popup modal HTML is available */
+    (function () {
+      const validMaidCodes = ['101', '102', '201', '301', '401'];
+
+      function get(id) {
+        return document.getElementById(id);
+      }
+
+      function showStage(stageId) {
+        ['flowStageScan', 'flowStageCode', 'flowStageCleaning', 'flowStageCompleted'].forEach(function (id) {
+          const stage = get(id);
+          if (stage) {
+            stage.classList.remove('active');
+          }
+        });
+
+        const selectedStage = get(stageId);
+        if (selectedStage) {
+          selectedStage.classList.add('active');
+        }
+
+        const statusStrip = get('flowStatusStrip');
+        if (statusStrip) {
+          statusStrip.classList.toggle(
+            'active',
+            stageId === 'flowStageCleaning' || stageId === 'flowStageCompleted'
+          );
+        }
+      }
+
+      const confirmBtn = get('confirmMaidCodeBtn');
+      if (confirmBtn && !confirmBtn.dataset.fixedClick) {
+        confirmBtn.dataset.fixedClick = '1';
+        confirmBtn.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const maidCode = (get('maidCodeInput')?.value || '').trim();
+
+          if (validMaidCodes.includes(maidCode)) {
+            get('cleaningStartModal')?.classList.add('active');
+          } else {
+            get('invalidMaidModal')?.classList.add('active');
+          }
+        });
+      }
+
+      get('startModalOkBtn')?.addEventListener('click', function () {
+        get('cleaningStartModal')?.classList.remove('active');
+        showStage('flowStageCleaning');
+      });
+
+      get('invalidMaidOkBtn')?.addEventListener('click', function () {
+        get('invalidMaidModal')?.classList.remove('active');
+      });
+
+      get('completeCleaningBtn')?.addEventListener('click', function () {
+        get('cleaningCompletedModal')?.classList.add('active');
+      });
+
+      get('completedModalOkBtn')?.addEventListener('click', function () {
+        get('cleaningCompletedModal')?.classList.remove('active');
+        showStage('flowStageCompleted');
+      });
+
+      get('restartFlowBtn')?.addEventListener('click', function () {
+        const maidCodeInput = get('maidCodeInput');
+        if (maidCodeInput) {
+          maidCodeInput.value = '101';
+        }
+        showStage('flowStageScan');
+      });
+    })();
+  </script>
+
+</body>
+</html>
