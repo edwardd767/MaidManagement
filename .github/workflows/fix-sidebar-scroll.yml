@@ -1,0 +1,73 @@
+name: Fix sidebar scrolling
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-sidebar-scroll:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch sidebar scroll behavior
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("index.html")
+          html = path.read_text(encoding="utf-8")
+
+          css = '''
+  <style id="sidebar-scroll-fix">
+    .sidebar{
+      overflow-y:auto !important;
+      overflow-x:hidden !important;
+      scrollbar-width:thin;
+      scrollbar-color:#7c7c7c transparent;
+    }
+
+    .sidebar::-webkit-scrollbar{
+      width:8px;
+    }
+
+    .sidebar::-webkit-scrollbar-track{
+      background:transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb{
+      background:#7c7c7c;
+      border-radius:8px;
+    }
+
+    .sidebar-scroll-track,
+    .sidebar-top-arrow,
+    .sidebar-bottom-arrow{
+      display:none !important;
+    }
+
+    .nav{
+      padding-right:4px !important;
+    }
+  </style>
+'''
+
+          if 'id="sidebar-scroll-fix"' not in html:
+              html = html.replace("</head>", css + "</head>")
+
+          path.write_text(html, encoding="utf-8")
+          PY
+
+      - name: Commit fix and remove temporary workflow
+        run: |
+          rm -f .github/workflows/fix-sidebar-scroll.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/fix-sidebar-scroll.yml
+          git diff --cached --quiet || git commit -m "Fix sidebar scrolling"
+          git push
