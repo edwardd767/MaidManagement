@@ -1,0 +1,29 @@
+name: Fix Auto Assign ZIndex
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          html = html.replace('z-index:15000;z-index:15000;left:242px;right:0;bottom:0;height:76px;background:#fff;border-top:1px solid #ddd;box-shadow:0 -2px 8px rgba(0,0,0,.12);display:none;align-items:center;justify-content:space-between;padding:0 22px;z-index:25', 'z-index:15000;left:242px;right:0;bottom:0;height:76px;background:#fff;border-top:1px solid #ddd;box-shadow:0 -2px 8px rgba(0,0,0,.12);display:none;align-items:center;justify-content:space-between;padding:0 22px')
+          html = html.replace("onclick=\"document.getElementById('autoAssignModal').classList.add('active');document.getElementById('autoAssignModal').style.display='flex';return false;\"", "onclick=\"event.preventDefault();event.stopPropagation();document.getElementById('autoAssignModal').classList.add('active');document.getElementById('autoAssignModal').style.display='flex';document.getElementById('autoAssignModal').style.zIndex='30000';return false;\"")
+          p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Fix Auto Assign z-index"
+          git push
