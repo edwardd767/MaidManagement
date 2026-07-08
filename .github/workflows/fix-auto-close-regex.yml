@@ -1,0 +1,31 @@
+name: Fix Auto Close Regex
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          html = re.sub(r'<button class="autoassign-close" onclick="[^"]*">Close</button>', '<button class="autoassign-close" onclick="document.getElementById(\'autoAssignModal\').classList.remove(\'active\');document.getElementById(\'autoAssignModal\').style.display=\'none\';return false;">Close</button>', html)
+          if '#autoAssignModal:not(.active)' not in html:
+              html = html.replace('</style>', '#autoAssignModal:not(.active){display:none!important}</style>', 1)
+          p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Fix Auto Assign Close action"
+          git push
