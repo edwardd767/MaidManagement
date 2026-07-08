@@ -1,0 +1,96 @@
+name: Patch Maid Management UI
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index.html
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          original = html
+
+          css_patch = '''
+
+    /* GitHub patch: make sidebar scroll normally and hide fixed scrollbar mock */
+    .sidebar{
+      overflow-y:auto !important;
+      overflow-x:hidden !important;
+      scrollbar-width:thin;
+      scrollbar-color:#7c7c7c transparent;
+    }
+    .sidebar::-webkit-scrollbar{ width:8px; }
+    .sidebar::-webkit-scrollbar-track{ background:transparent; }
+    .sidebar::-webkit-scrollbar-thumb{ background:#7c7c7c; border-radius:8px; }
+    .sidebar-scroll-track,
+    .sidebar-top-arrow,
+    .sidebar-bottom-arrow{
+      display:none !important;
+    }
+    .nav{
+      padding-right:4px !important;
+    }
+'''
+          if 'GitHub patch: make sidebar scroll normally' not in html:
+              html = html.replace('</style>', css_patch + '\n</style>', 1)
+
+          # Match the icon already used by Maid Profile, then reuse it for the new cards.
+          icon_match = re.search(r'<div class="maid-card-icon custom-maid-icon"><img src="([^"]+)" alt="Maid Profile Icon"></div>\s*<div class="maid-card-title">Maid Profile</div>', html)
+          icon_src = icon_match.group(1) if icon_match else ''
+          icon_html_duty = f'<div class="maid-card-icon custom-maid-icon"><img src="{icon_src}" alt="Maid On Duty Icon"></div>' if icon_src else '<div class="maid-card-icon">🧹</div>'
+          icon_html_assignment = f'<div class="maid-card-icon custom-maid-icon"><img src="{icon_src}" alt="Maid Assignment Icon"></div>' if icon_src else '<div class="maid-card-icon">🧹</div>'
+
+          new_cards = f'''
+          <div class="maid-card" id="maidOnDutyCard">
+            {icon_html_duty}
+            <div class="maid-card-title">Maid On Duty</div>
+            <div class="maid-card-arrow"><span class="material-symbols-rounded">chevron_right</span></div>
+          </div>
+
+          <div class="maid-card" id="maidAssignmentCard">
+            {icon_html_assignment}
+            <div class="maid-card-title">Maid Assignment</div>
+            <div class="maid-card-arrow"><span class="material-symbols-rounded">chevron_right</span></div>
+          </div>
+
+'''
+          if 'id="maidOnDutyCard"' not in html:
+              marker = '<div class="maid-card" id="maidCleaningFlowCard">'
+              if marker in html:
+                  html = html.replace(marker, new_cards + '          ' + marker, 1)
+
+          # Keep the current displayed wording simple.
+          html = html.replace('<div class="maid-card-title">Maid Cleaning Flow</div>', '<div class="maid-card-title">Maid Cleaning</div>')
+
+          # Remove this one-time workflow after applying the patch.
+          wf = Path('.github/workflows/patch-maid-ui.yml')
+          if wf.exists():
+              wf.unlink()
+
+          if html != original:
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/patch-maid-ui.yml
+          git commit -m "Update maid management cards and sidebar scroll"
+          git push
