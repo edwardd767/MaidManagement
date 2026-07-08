@@ -1,0 +1,42 @@
+name: Patch Auto Assign Modal
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index.html
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          original = html
+
+          css = ".autoassign-box{width:520px;max-width:calc(100vw - 28px);background:#fff;border-radius:6px;box-shadow:0 5px 18px rgba(0,0,0,.28);overflow:hidden}.autoassign-head{height:52px;background:#ffe4cc;color:#8a3d00;display:flex;align-items:center;padding:0 18px;font-size:18px;font-weight:800}.autoassign-body{padding:12px 14px 14px;background:#fff}.autoassign-maid{background:#ffe9d3;border-radius:5px;margin-bottom:8px;overflow:hidden;border:1px solid #ffd0a8}.autoassign-row{height:50px;display:flex;align-items:center;padding:0 12px;gap:10px;font-weight:800;color:#1d1d1d}.autoassign-name{flex:1}.autoassign-stats{display:flex;align-items:center;gap:8px;color:#8a3d00;font-size:13px}.autoassign-stat-icon{font-size:17px;color:#f79334}.autoassign-rooms{display:flex;gap:12px;flex-wrap:wrap;background:#fff;padding:12px;border-top:1px solid #ffd0a8}.auto-room-chip{position:relative;width:70px;height:42px;background:#fff3e8;border:1px solid #ffd3ae;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.14);padding:5px 7px 4px 17px;font-weight:800}.auto-room-chip:before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;background:#ff2b70;border-radius:6px 0 0 6px}.auto-room-chip .num{font-size:13px;line-height:16px}.auto-room-chip .cnt{font-size:11px;color:#2b55ff;text-align:right}.autoassign-close-wrap{text-align:right;padding-top:4px}.autoassign-close{height:38px;min-width:118px;border:0;border-radius:5px;background:#f79334;color:#fff;font-size:16px;font-weight:800;font-family:'Nunito';cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.2)}@media(max-width:560px){.autoassign-box{width:96vw}.autoassign-head{height:44px;font-size:15px}.autoassign-body{padding:10px}.autoassign-row{height:45px;font-size:13px}.autoassign-rooms{gap:8px;padding:10px}.auto-room-chip{width:58px;height:37px;padding-left:13px}.auto-room-chip .num{font-size:11px}.auto-room-chip .cnt{font-size:10px}.autoassign-stats{font-size:11px;gap:5px}.autoassign-close{height:34px;min-width:100px;font-size:14px}}"
+          if ".autoassign-box" not in html:
+              needle = ".assign-btn{height:44px;min-width:150px;border:0;border-radius:6px;background:#f79334;color:#fff;font-size:18px;font-weight:800;font-family:'Nunito';box-shadow:0 3px 8px rgba(0,0,0,.22);cursor:pointer}"
+              html = html.replace(needle, needle + css, 1)
+
+          html = html.replace('<button class="assign-btn">Auto Assign</button>', '<button class="assign-btn" id="autoAssignBtn" onclick="autoAssignModal.classList.add(\'active\')">Auto Assign</button>', 1)
+
+          modal = '''<div class="modal" id="autoAssignModal"><div class="autoassign-box"><div class="autoassign-head">Auto Assign</div><div class="autoassign-body"><div class="autoassign-maid"><div class="autoassign-row"><div class="autoassign-name">Edward Durai</div><div class="autoassign-stats"><span class="material-symbols-rounded autoassign-stat-icon">meeting_room</span><span>4</span><span class="material-symbols-rounded autoassign-stat-icon">apartment</span><span>11</span></div><span class="material-symbols-rounded">keyboard_arrow_up</span></div><div class="autoassign-rooms"><div class="auto-room-chip"><div class="num">1102</div><div class="cnt">2</div></div><div class="auto-room-chip"><div class="num">5101</div><div class="cnt">2</div></div><div class="auto-room-chip"><div class="num">1104</div><div class="cnt">2</div></div><div class="auto-room-chip"><div class="num">5105</div><div class="cnt">2</div></div></div></div><div class="autoassign-maid"><div class="autoassign-row"><div class="autoassign-name">Azim Hidayat</div><div class="autoassign-stats"><span class="material-symbols-rounded autoassign-stat-icon">meeting_room</span><span>4</span><span class="material-symbols-rounded autoassign-stat-icon">apartment</span><span>11</span></div><span class="material-symbols-rounded">keyboard_arrow_down</span></div></div><div class="autoassign-maid"><div class="autoassign-row"><div class="autoassign-name">Mohd Rushdi</div><div class="autoassign-stats"><span class="material-symbols-rounded autoassign-stat-icon">meeting_room</span><span>4</span><span class="material-symbols-rounded autoassign-stat-icon">apartment</span><span>11</span></div><span class="material-symbols-rounded">keyboard_arrow_down</span></div></div><div class="autoassign-maid"><div class="autoassign-row"><div class="autoassign-name">Adam Firdaus</div><div class="autoassign-stats"><span class="material-symbols-rounded autoassign-stat-icon">meeting_room</span><span>4</span><span class="material-symbols-rounded autoassign-stat-icon">apartment</span><span>11</span></div><span class="material-symbols-rounded">keyboard_arrow_down</span></div></div><div class="autoassign-maid"><div class="autoassign-row"><div class="autoassign-name">Raymond Goh</div><div class="autoassign-stats"><span class="material-symbols-rounded autoassign-stat-icon">meeting_room</span><span>4</span><span class="material-symbols-rounded autoassign-stat-icon">apartment</span><span>11</span></div><span class="material-symbols-rounded">keyboard_arrow_down</span></div></div><div class="autoassign-close-wrap"><button class="autoassign-close" onclick="autoAssignModal.classList.remove('active')">Close</button></div></div></div></div>'''
+          if 'id="autoAssignModal"' not in html:
+              html = html.replace('<div class="room-action-menu" id="roomActionMenu">', modal + '\n<div class="room-action-menu" id="roomActionMenu">', 1)
+
+          if html != original:
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add Maid Assignment auto assign modal"
+          git push
