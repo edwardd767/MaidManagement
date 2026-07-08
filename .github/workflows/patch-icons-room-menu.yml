@@ -1,0 +1,61 @@
+name: Patch Icons And Room Menu
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  patch-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index.html
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          original = html
+
+          # Add feature-card icon CSS
+          if '.feature-card-icon' not in html:
+              html = html.replace('.broom{font-size:31px}', '.broom{font-size:31px}.feature-card-icon{font-size:34px;color:#f79334}', 1)
+
+          # Update Maid Management card icons
+          html = html.replace('<div class="card" id="dutyCard"><div class="card-icon broom">🧹</div><div class="card-title">Maid On Duty</div><div class="arrow">›</div></div>', '<div class="card" id="dutyCard"><div class="card-icon"><span class="material-symbols-rounded feature-card-icon">event_available</span></div><div class="card-title">Maid On Duty</div><div class="arrow">›</div></div>')
+          html = html.replace('<div class="card"><div class="card-icon broom">🧹</div><div class="card-title">Maid Assignment</div><div class="arrow">›</div></div>', '<div class="card"><div class="card-icon"><span class="material-symbols-rounded feature-card-icon">assignment_ind</span></div><div class="card-title">Maid Assignment</div><div class="arrow">›</div></div>')
+          html = html.replace('<div class="card" id="prodCard"><div class="card-icon broom">🧹</div><div class="card-title">Maid Productivity</div><div class="arrow">›</div></div>', '<div class="card" id="prodCard"><div class="card-icon"><span class="material-symbols-rounded feature-card-icon">monitoring</span></div><div class="card-title">Maid Productivity</div><div class="arrow">›</div></div>')
+
+          # Add room action menu CSS
+          if '.room-action-menu' not in html:
+              html = html.replace('.room-menu{margin-left:auto}', '.room-menu{margin-left:auto;cursor:pointer}.room-action-menu{position:fixed;background:#fff;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:2000;display:none;min-width:150px;padding:8px 0}.room-action-menu.active{display:block}.room-action-menu div{padding:10px 18px;font-size:16px;font-weight:700;cursor:pointer}.room-action-menu div:hover{background:#fff3e4;color:#ff8a00}', 1)
+
+          # Add menu HTML before modals
+          menu_html = '<div class="room-action-menu" id="roomActionMenu"><div>Edit</div><div>Inactive</div><div>HK Maid QR</div></div>'
+          if 'id="roomActionMenu"' not in html:
+              html = html.replace('<div class="modal" id="startModal">', menu_html + '\n  <div class="modal" id="startModal">', 1)
+
+          # Replace room menu click JS after room list generation
+          old = "const rooms=['101','102','103','1101','1102','1103','1201','1202','1203','1301'];roomList.innerHTML=rooms.map((r,i)=>`<div class=\"room-card\"><div class=\"pill ${i==0?'teal':i%3==1?'pinkpill':'green'}\">${r}</div><div><b>Level ${r.length==3?'1':r.substring(0,2)}</b><br>🧍 <b>4</b></div><span class=\"material-symbols-rounded room-menu\">more_vert</span></div>`).join('');"
+          new = old + "document.querySelectorAll('.room-menu').forEach(m=>m.onclick=(e)=>{e.stopPropagation();roomActionMenu.style.top=(e.clientY+6)+'px';roomActionMenu.style.left=(e.clientX-145)+'px';roomActionMenu.classList.toggle('active')});document.addEventListener('click',()=>roomActionMenu.classList.remove('active'));"
+          if old in html and "roomActionMenu.style.top" not in html:
+              html = html.replace(old, new, 1)
+
+          if html != original:
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/patch-icons-room-menu.yml
+          git commit -m "Apply icons and room action menu"
+          git push
