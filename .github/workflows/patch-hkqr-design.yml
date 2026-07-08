@@ -1,0 +1,41 @@
+name: Patch HK Maid QR Design
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index.html
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          original = html
+
+          css = r'''#qrModal .modal-box{width:760px;max-width:calc(100vw - 26px);background:#eee;border-radius:0;box-shadow:0 5px 18px rgba(0,0,0,.28);overflow:hidden}#qrModal .modal-head{display:none}#qrModal .modal-body{padding:0;background:#eee}.hkqr-card{background:#eee;text-align:center;padding:0 14px 14px;min-height:455px;border-top:3px solid #8a8a8a}.hkqr-strip{height:28px;background:#e7dfd4;margin:0 0 10px}.hkqr-title{font-size:24px;font-weight:800;margin:10px 0 18px;color:#111}.hkqr-image{width:230px;height:230px;margin:0 auto;background:#fff;display:flex;align-items:center;justify-content:center}.hkqr-image svg{width:205px;height:205px}.hkqr-room{font-size:22px;font-weight:800;color:#666;margin:20px 0 26px}.hkqr-actions{display:flex;justify-content:flex-end;gap:12px;padding-right:0}.hkqr-btn{height:42px;min-width:92px;border:0;border-radius:5px;background:#f79334;color:#fff;font-size:16px;font-weight:800;font-family:Nunito,Arial,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.25);cursor:pointer}.hkqr-btn:hover{background:#ef8424}@media(max-width:560px){#qrModal .modal-box{width:96vw}.hkqr-card{min-height:410px}.hkqr-title{font-size:20px}.hkqr-image{width:190px;height:190px}.hkqr-image svg{width:170px;height:170px}.hkqr-room{font-size:18px;margin:16px 0 20px}.hkqr-actions{justify-content:center}.hkqr-btn{min-width:76px;height:38px;font-size:14px}}'''
+          if '.hkqr-card' not in html:
+              html = html.replace('</style>', css + '</style>', 1)
+
+          qr_svg = r'''<svg viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><rect width="210" height="210" fill="#fff"/><g fill="#000"><rect x="12" y="12" width="52" height="52"/><rect x="22" y="22" width="32" height="32" fill="#fff"/><rect x="30" y="30" width="16" height="16"/><rect x="146" y="12" width="52" height="52"/><rect x="156" y="22" width="32" height="32" fill="#fff"/><rect x="164" y="30" width="16" height="16"/><rect x="12" y="146" width="52" height="52"/><rect x="22" y="156" width="32" height="32" fill="#fff"/><rect x="30" y="164" width="16" height="16"/><rect x="78" y="12" width="12" height="12"/><rect x="104" y="12" width="24" height="12"/><rect x="78" y="26" width="24" height="12"/><rect x="116" y="26" width="12" height="26"/><rect x="80" y="52" width="12" height="26"/><rect x="104" y="64" width="12" height="12"/><rect x="130" y="66" width="12" height="26"/><rect x="66" y="78" width="12" height="24"/><rect x="88" y="78" width="36" height="12"/><rect x="150" y="78" width="12" height="24"/><rect x="174" y="78" width="24" height="12"/><rect x="12" y="78" width="24" height="12"/><rect x="40" y="92" width="24" height="12"/><rect x="78" y="98" width="12" height="24"/><rect x="104" y="98" width="24" height="12"/><rect x="142" y="104" width="24" height="12"/><rect x="184" y="104" width="14" height="28"/><rect x="14" y="118" width="14" height="14"/><rect x="38" y="120" width="26" height="12"/><rect x="78" y="128" width="24" height="12"/><rect x="116" y="118" width="12" height="24"/><rect x="142" y="130" width="12" height="24"/><rect x="168" y="130" width="30" height="12"/><rect x="78" y="146" width="12" height="24"/><rect x="104" y="146" width="24" height="12"/><rect x="130" y="156" width="12" height="12"/><rect x="156" y="154" width="42" height="12"/><rect x="90" y="176" width="14" height="22"/><rect x="116" y="176" width="12" height="12"/><rect x="142" y="180" width="28" height="18"/><rect x="184" y="176" width="14" height="22"/></g></svg>'''
+          new_qr = f'''<div class="modal" id="qrModal"><div class="modal-box"><div class="modal-body"><div class="hkqr-card"><div class="hkqr-strip"></div><div class="hkqr-title">For Housekeeping Use Only</div><div class="hkqr-image">{qr_svg}</div><div class="hkqr-room">Room No: <span id="qrRoomNo">101</span></div><div class="hkqr-actions"><button class="hkqr-btn" type="button">Share</button><button class="hkqr-btn" type="button" onclick="closeModal('qrModal')">Close</button><button class="hkqr-btn" type="button" onclick="window.print()">Print</button></div></div></div></div></div>'''
+          html = re.sub(r'<div class="modal" id="qrModal">.*?<div class="modal" id="startModal">', new_qr + '<div class="modal" id="startModal">', html, count=1, flags=re.S)
+
+          if html != original:
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          rm -f .github/workflows/patch-hkqr-design.yml
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html .github/workflows/patch-hkqr-design.yml
+          git diff --cached --quiet || git commit -m "Implement HK Maid QR design"
+          git push
