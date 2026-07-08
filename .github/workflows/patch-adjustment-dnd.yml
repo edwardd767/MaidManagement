@@ -1,0 +1,65 @@
+name: Patch Assignment Adjustment Drag Drop
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          original = html
+
+          css = ".adjust-note{background:#fff2cf;border:1px solid #f6c77e;border-radius:6px;padding:11px 14px;margin-bottom:10px;font-size:16px;font-weight:800;color:#5d3b00;display:flex;align-items:center;gap:8px}.adjust-list{display:flex;flex-direction:column;gap:8px}.adjust-maid{background:#fff;border:1px solid #d8d8d8;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.14);overflow:hidden}.adjust-head{height:52px;background:#ffe9d3;display:flex;align-items:center;padding:0 14px;font-size:18px;font-weight:800;color:#111;cursor:pointer}.adjust-name{flex:1}.adjust-stats{display:flex;align-items:center;gap:8px;color:#8a3d00;font-size:14px}.adjust-stats .material-symbols-rounded{font-size:18px;color:#f79334}.adjust-toggle{margin-left:12px;font-size:24px}.adjust-rooms{min-height:72px;background:#fff;display:flex;gap:14px;flex-wrap:wrap;padding:14px;border-top:1px solid #ffd0a8}.adjust-maid.collapsed .adjust-rooms{display:none}.adjust-room{position:relative;width:74px;height:44px;background:#fff3e8;border:1px solid #ffd3ae;border-radius:7px;box-shadow:0 1px 4px rgba(0,0,0,.14);padding:6px 8px 4px 18px;font-weight:800;cursor:grab}.adjust-room:before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;background:#ff2b70;border-radius:7px 0 0 7px}.adjust-room.dragging{opacity:.45;transform:scale(.96)}.adjust-rooms.drop-target{outline:3px dashed #f79334;outline-offset:-6px;background:#fff8ef}.adjust-room .num{font-size:14px;line-height:16px}.adjust-room .cnt{font-size:11px;color:#2b55ff;text-align:right}@media(max-width:560px){.adjust-head{height:44px;font-size:13px;padding:0 10px}.adjust-note{font-size:12px;padding:8px 10px}.adjust-rooms{gap:8px;padding:10px}.adjust-room{width:58px;height:37px;padding-left:13px}.adjust-room .num{font-size:11px}.adjust-room .cnt{font-size:10px}.adjust-stats{font-size:11px;gap:5px}}"
+          if '.adjust-note' not in html:
+              html = html.replace('.adjust-placeholder{background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:var(--shadow);padding:32px;text-align:center;font-size:22px;font-weight:800;color:#666}', '.adjust-placeholder{background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:var(--shadow);padding:32px;text-align:center;font-size:22px;font-weight:800;color:#666}' + css, 1)
+
+          old = '<div id="adjustContent" style="display:none"><div class="adjust-placeholder">Maid Assignment Adjustment<br><span style="font-size:16px;color:#999">Screen to be updated later.</span></div></div>'
+          new = '<div id="adjustContent" style="display:none"><div class="adjust-note"><span class="material-symbols-rounded" style="font-size:18px">info</span>Drag and drop room for adjustment</div><div class="adjust-list" id="adjustList"></div></div>'
+          html = html.replace(old, new, 1)
+
+          js = r'''
+function roomChip(room,cnt){return `<div class="adjust-room" draggable="true"><div class="num">${room}</div><div class="cnt">${cnt}</div></div>`}
+function renderAdjustment(){
+  const groups=[
+    ['Edward Durai',true,[['1102',2],['5101',2],['1102',2],['5101',2],['5101',2],['1104',3],['6201',4],['1104',3],['6201',4],['6201',4]]],
+    ['Azim Hidayat',true,[['1102',2],['5101',2],['1102',2],['5101',2],['5101',2],['1104',3],['6201',4],['1104',3],['6201',4],['6201',4]]],
+    ['Mohd Rushdi',false,[]],
+    ['Adam Firdaus',false,[]],
+    ['Raymond Goh',false,[]]
+  ];
+  const target=document.getElementById('adjustList');
+  if(!target) return;
+  target.innerHTML=groups.map(g=>`<div class="adjust-maid ${g[1]?'':'collapsed'}"><div class="adjust-head"><div class="adjust-name">${g[0]}</div><div class="adjust-stats"><span class="material-symbols-rounded">meeting_room</span><span>4</span><span class="material-symbols-rounded">apartment</span><span>11</span></div><span class="material-symbols-rounded adjust-toggle">${g[1]?'keyboard_arrow_up':'keyboard_arrow_down'}</span></div><div class="adjust-rooms">${g[2].map(x=>roomChip(x[0],x[1])).join('')}</div></div>`).join('');
+  bindAdjustment();
+}
+function bindAdjustment(){
+  let draggedRoom=null;
+  document.querySelectorAll('.adjust-head').forEach(h=>h.onclick=()=>{const card=h.closest('.adjust-maid');card.classList.toggle('collapsed');h.querySelector('.adjust-toggle').textContent=card.classList.contains('collapsed')?'keyboard_arrow_down':'keyboard_arrow_up'});
+  document.querySelectorAll('.adjust-room').forEach(chip=>{chip.addEventListener('dragstart',e=>{draggedRoom=chip;chip.classList.add('dragging');e.dataTransfer.effectAllowed='move'});chip.addEventListener('dragend',()=>{chip.classList.remove('dragging');document.querySelectorAll('.adjust-rooms').forEach(z=>z.classList.remove('drop-target'))})});
+  document.querySelectorAll('.adjust-rooms').forEach(zone=>{zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drop-target')});zone.addEventListener('dragleave',()=>zone.classList.remove('drop-target'));zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drop-target');if(draggedRoom){zone.appendChild(draggedRoom);const maid=zone.closest('.adjust-maid');maid.classList.remove('collapsed');maid.querySelector('.adjust-toggle').textContent='keyboard_arrow_up'}})});
+}
+renderAdjustment();
+'''
+          if 'renderAdjustment()' not in html:
+              html = html.replace('prodList.innerHTML=', js + 'prodList.innerHTML=', 1)
+
+          if html != original:
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Implement Maid Assignment Adjustment drag and drop"
+          git push
