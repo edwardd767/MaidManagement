@@ -1,4 +1,4 @@
-name: Fix Auto Assign ZIndex
+name: Patch Maid Assignment Tabs
 on:
   push:
     branches: [ main ]
@@ -10,20 +10,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch
+      - name: Patch tabs
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('index.html')
           html = p.read_text(encoding='utf-8')
-          html = html.replace('z-index:15000;z-index:15000;left:242px;right:0;bottom:0;height:76px;background:#fff;border-top:1px solid #ddd;box-shadow:0 -2px 8px rgba(0,0,0,.12);display:none;align-items:center;justify-content:space-between;padding:0 22px;z-index:25', 'z-index:15000;left:242px;right:0;bottom:0;height:76px;background:#fff;border-top:1px solid #ddd;box-shadow:0 -2px 8px rgba(0,0,0,.12);display:none;align-items:center;justify-content:space-between;padding:0 22px')
-          html = html.replace("onclick=\"document.getElementById('autoAssignModal').classList.add('active');document.getElementById('autoAssignModal').style.display='flex';return false;\"", "onclick=\"event.preventDefault();event.stopPropagation();document.getElementById('autoAssignModal').classList.add('active');document.getElementById('autoAssignModal').style.display='flex';document.getElementById('autoAssignModal').style.zIndex='30000';return false;\"")
-          p.write_text(html, encoding='utf-8')
+          original = html
+          css = ".assignment-tabs{display:flex;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.15);overflow:hidden;margin-bottom:14px}.assignment-tab{flex:1;height:52px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:18px;font-weight:800;color:#333;cursor:pointer;border-bottom:4px solid transparent}.assignment-tab.active{background:#fff3e4;color:#f79334;border-bottom-color:#f79334}.assignment-tab.inactive{background:#fff;color:#555}.assignment-tab.inactive:hover{background:#fff8ef;color:#f79334}@media(max-width:560px){.assignment-tabs{margin-bottom:10px}.assignment-tab{height:44px;font-size:13px;padding:0 6px}}"
+          if '.assignment-tabs' not in html:
+              html = html.replace('.assignment-wrap{width:100%;min-height:calc(100vh - 168px);padding-bottom:86px}', css + '.assignment-wrap{width:100%;min-height:calc(100vh - 168px);padding-bottom:86px}', 1)
+          old = '<div class="assignment-wrap"><div class="assign-filter" id="assignFilter">'
+          new = '<div class="assignment-tabs"><div class="assignment-tab active">Maid Assignment</div><div class="assignment-tab inactive">Maid Assignment Adjustment</div></div><div class="assignment-wrap"><div class="assign-filter" id="assignFilter">'
+          if old in html and 'Maid Assignment Adjustment' not in html:
+              html = html.replace(old, new, 1)
+          if html != original:
+              p.write_text(html, encoding='utf-8')
           PY
       - name: Commit
         run: |
           git config user.name "github-actions-bot"
           git config user.email "actions@github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Fix Auto Assign z-index"
+          git diff --cached --quiet || git commit -m "Add Maid Assignment tabs"
           git push
