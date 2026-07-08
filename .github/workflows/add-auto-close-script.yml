@@ -1,0 +1,44 @@
+name: Add Auto Close Script
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add script
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          fix = """<script id="auto-close-force">
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('.autoassign-close');
+  if(btn){
+    e.preventDefault();
+    e.stopPropagation();
+    var modal = document.getElementById('autoAssignModal');
+    if(modal){
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+    }
+  }
+}, true);
+</script>
+"""
+          if 'id="auto-close-force"' not in html:
+              html = html.replace('</body>', fix + '</body>')
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Add Auto Assign close script"
+          git push
