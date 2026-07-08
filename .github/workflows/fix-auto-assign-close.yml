@@ -1,0 +1,31 @@
+name: Fix Auto Assign Close
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch close button
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          original = html
+          html = html.replace("onclick=\"autoAssignModal.classList.remove('active')\"", "onclick=\"autoAssignModal.classList.remove('active');autoAssignModal.style.display='none'\"")
+          html = html.replace("</style>", "\n#autoAssignModal:not(.active){display:none!important}\n</style>", 1)
+          if html != original:
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Fix Auto Assign close button"
+          git push
