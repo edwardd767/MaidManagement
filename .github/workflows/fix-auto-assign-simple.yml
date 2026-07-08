@@ -1,0 +1,32 @@
+name: Fix Auto Assign Simple
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          old = '<button class="assign-btn" id="autoAssignBtn" onclick="autoAssignModal.classList.add(\'active\')">Auto Assign</button>'
+          new = '<button class="assign-btn" id="autoAssignBtn" type="button" onclick="document.getElementById(\'autoAssignModal\').classList.add(\'active\');document.getElementById(\'autoAssignModal\').style.display=\'flex\';return false;">Auto Assign</button>'
+          html = html.replace(old, new)
+          html = html.replace('.assign-footer{position:fixed;', '.assign-footer{position:fixed;z-index:15000;', 1)
+          html = html.replace('.assign-btn{height:44px;', '.assign-btn{position:relative;z-index:16000;pointer-events:auto;height:44px;', 1)
+          p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Fix Auto Assign click"
+          git push
