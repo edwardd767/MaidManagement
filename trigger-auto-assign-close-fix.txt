@@ -1,0 +1,1 @@
+Trigger Auto Assign close button fix.
