@@ -1,0 +1,1 @@
+Trigger tooltip wording change to Total HK Points / No of Maid on Duty.
