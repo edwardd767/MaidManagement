@@ -1,0 +1,32 @@
+name: Restore Duty Form Border
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Maid On Duty form border
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          css = '.duty-form{background:#fff!important;border:1px solid #ddd!important;border-radius:6px!important;box-shadow:0 1px 4px #0003!important;padding:18px!important;width:100%!important;min-height:280px!important}'
+          if 'min-height:280px!important' not in html:
+              html = html.replace('</style>', css + '\n</style>', 1)
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit patch and remove workflow
+        run: |
+          rm -f .github/workflows/restore-duty-form-border.yml
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html .github/workflows/restore-duty-form-border.yml
+          git diff --cached --quiet || git commit -m "Restore Maid On Duty form border"
+          git push
