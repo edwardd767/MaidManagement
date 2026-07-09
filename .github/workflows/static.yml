@@ -33,6 +33,21 @@ jobs:
           p = Path('index.html')
           html = p.read_text(encoding='utf-8')
 
+          # Standardize hotel name across all pages.
+          for old in ['Bird of Paradise Hotel &amp; Resort', 'Bird of Paradise Hotel & Resort', 'Hotel Paradise', 'IFCA Garden Hotel']:
+              html = html.replace(old, 'HOTEL PARADISE')
+
+          # Standardize header title size so HOTEL PARADISE displays fully.
+          hotel_name_css = '''
+          .hero{height:78px!important;}
+          .hero-content{padding:8px 14px 30px 14px!important;}
+          .title{font-size:23px!important;line-height:1!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;text-transform:uppercase!important;}
+          .hero-bottom{height:24px!important;}
+          @media(max-width:560px){.hero{height:78px!important}.title{font-size:19px!important}}
+          '''
+          if 'text-transform:uppercase!important' not in html:
+              html = html.replace('</style>', hotel_name_css + '\n</style>', 1)
+
           # Hotel Settings cards should stack vertically.
           html = html.replace(
               '.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.settings-grid .card{margin:0;height:82px}',
@@ -47,9 +62,9 @@ jobs:
               if end != -1:
                   html = html[:start] + nav + html[end + len('</ul></aside>'):]
 
-          # Restore border/card styling for New Maid Profile form.
-          form_css = '.form-card{background:#fff!important;border:1px solid #ddd!important;border-radius:6px!important;box-shadow:0 1px 4px #0003!important;padding:18px!important;width:100%!important;min-height:180px!important}'
-          if 'min-height:180px!important' not in html:
+          # Restore border/card styling for New Maid Profile form and Maid On Duty detail form.
+          form_css = '.form-card{background:#fff!important;border:1px solid #ddd!important;border-radius:6px!important;box-shadow:0 1px 4px #0003!important;padding:18px!important;width:100%!important;min-height:180px!important}.duty-form{background:#fff!important;border:1px solid #ddd!important;border-radius:6px!important;box-shadow:0 1px 4px #0003!important;padding:18px!important;width:100%!important;min-height:280px!important}'
+          if 'min-height:280px!important' not in html:
               html = html.replace('</style>', form_css + '\n</style>', 1)
 
           # Add Business Insights screen CSS.
