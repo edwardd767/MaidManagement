@@ -31,15 +31,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Apply Hotel Settings UI patch
+      - name: Apply HotelX UI patches
         run: |
           python - <<'PY'
           from pathlib import Path
+
           p = Path('index.html')
           html = p.read_text(encoding='utf-8')
-          old = '.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.settings-grid .card{margin:0;height:82px}'
-          new = '.settings-grid{display:grid;grid-template-columns:1fr;gap:10px;max-width:100%}.settings-grid .card{margin:0;height:82px;width:100%}'
-          html = html.replace(old, new)
+
+          # Keep Hotel Settings cards stacked vertically.
+          html = html.replace(
+              '.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.settings-grid .card{margin:0;height:82px}',
+              '.settings-grid{display:grid;grid-template-columns:1fr;gap:10px;max-width:100%}.settings-grid .card{margin:0;height:82px;width:100%}'
+          )
+
+          # Remove strikethrough from Business Insights in the side menu.
+          html = html.replace(
+              '<li class="nav-item strike"><span class="icon">📊</span><span>Business Insights</span></li>',
+              '<li class="nav-item"><span class="icon">📊</span><span>Business Insights</span></li>'
+          )
+
           p.write_text(html, encoding='utf-8')
           PY
 
