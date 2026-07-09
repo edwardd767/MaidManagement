@@ -1,0 +1,32 @@
+name: Add Maid Cleaning Release Policy
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add Maid Cleaning Release dropdown
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          old = '<div class="policy-row"><div class="policy-label">Block Room Release</div><div class="policy-select"><select><option>VI - Vacant Inspection</option><option>VC - Vacant Clean</option><option>VD - Vacant Dirty</option><option>OC - Occupied Clean</option></select></div></div></div></section>'
+          new = '<div class="policy-row"><div class="policy-label">Block Room Release</div><div class="policy-select"><select><option>VI - Vacant Inspection</option><option>VC - Vacant Clean</option><option>VD - Vacant Dirty</option><option>OC - Occupied Clean</option></select></div></div><div class="policy-row"><div class="policy-label">Maid Cleaning Release</div><div class="policy-select"><select><option>VD - Vacant Clean</option><option>VC - Vacant Clean</option><option>VD - Vacant Dirty</option><option>VI - Vacant Inspection</option><option>OC - Occupied Clean</option></select></div></div></div></section>'
+          if 'Maid Cleaning Release' not in html and old in html:
+              html = html.replace(old, new, 1)
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit change
+        run: |
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Add Maid Cleaning Release policy dropdown"
+          git push
