@@ -11,27 +11,50 @@
     'Est. vs Avg Cleaning Time':'Est. vs Avg Cleaning Time = room type estimated cleaning time compared with actual average cleaning time. Example: 20 / 24 min means actual is 4 minutes slower than estimate.',
     'Rooms Cleaned by Maid':'Rooms Cleaned by Maid = completed rooms grouped by maid. Example: Cassandra 78, Edward 64, Mark Goh 92.'
   };
+  function getFloatingTip(){
+    var tip=document.getElementById('mbiFloatingTip');
+    if(!tip){ tip=document.createElement('div'); tip.id='mbiFloatingTip'; tip.className='mbi-floating-tip'; document.body.appendChild(tip); }
+    return tip;
+  }
+  function showTip(target){
+    var text=target.getAttribute('data-tip'); if(!text) return;
+    var tip=getFloatingTip(); tip.textContent=text; tip.classList.add('show');
+    var r=target.getBoundingClientRect();
+    var left=r.left + (r.width/2) - 165;
+    var top=r.bottom + 12;
+    if(left < 14) left = 14;
+    if(left + 330 > window.innerWidth - 14) left = window.innerWidth - 344;
+    if(window.innerWidth < 720){ left = Math.max(14, Math.min(left, window.innerWidth - 284)); }
+    if(top + 120 > window.innerHeight){ top = Math.max(14, r.top - 132); }
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  }
+  function hideTip(){ var tip=document.getElementById('mbiFloatingTip'); if(tip) tip.classList.remove('show'); }
+  function attach(el){
+    if(!el || el.getAttribute('data-tooltip-ready')==='1') return;
+    el.setAttribute('data-tooltip-ready','1');
+    el.removeAttribute('title');
+    el.addEventListener('mouseenter',function(){ showTip(el); });
+    el.addEventListener('mousemove',function(){ showTip(el); });
+    el.addEventListener('mouseleave',hideTip);
+    el.addEventListener('click',function(e){ e.preventDefault(); showTip(el); setTimeout(hideTip,2600); });
+  }
   function applyTips(){
-    var page=document.getElementById('businessInsightsPage');
-    if(!page) return;
+    var page=document.getElementById('businessInsightsPage'); if(!page) return;
     page.querySelectorAll('.mbi-kpi,.mbi-mini').forEach(function(card){
       var label=card.querySelector('.mbi-kpi-title,.mbi-mini-label');
       var icon=card.querySelector('.mbi-icon');
-      if(label && icon && tips[label.textContent.trim()]){
-        icon.classList.add('mbi-tip');
-        icon.setAttribute('data-tip',tips[label.textContent.trim()]);
-        icon.setAttribute('title',tips[label.textContent.trim()]);
-      }
+      var key=label ? label.textContent.trim() : '';
+      if(icon && tips[key]){ icon.classList.add('mbi-tip'); icon.setAttribute('data-tip',tips[key]); attach(icon); }
     });
     var title=page.querySelector('.mbi-panel-title');
     if(title && !title.querySelector('.mbi-panel-info')){
       var info=document.createElement('span');
       info.className='mbi-icon mbi-tip mbi-panel-info';
       info.setAttribute('data-tip',tips['Rooms Cleaned by Maid']);
-      info.setAttribute('title',tips['Rooms Cleaned by Maid']);
       info.innerHTML='<span class="material-symbols-rounded">info</span>';
       title.appendChild(info);
     }
+    var infoIcon=page.querySelector('.mbi-panel-info'); if(infoIcon) attach(infoIcon);
   }
   ready(function(){ applyTips(); setTimeout(applyTips,800); setTimeout(applyTips,1700); });
 })();
