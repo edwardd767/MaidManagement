@@ -1,0 +1,1 @@
+Trigger Hotel Settings card layout update: Room Status Policy below Room.
