@@ -1,0 +1,64 @@
+name: Fix Hotel Name Header
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Standardize hotel name and header sizing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          original = html
+
+          # Standardize all hotel names to HOTEL PARADISE.
+          replacements = [
+              ('Bird of Paradise Hotel &amp; Resort', 'HOTEL PARADISE'),
+              ('Bird of Paradise Hotel & Resort', 'HOTEL PARADISE'),
+              ('Hotel Paradise', 'HOTEL PARADISE'),
+              ('IFCA Garden Hotel', 'HOTEL PARADISE'),
+          ]
+          for old, new in replacements:
+              html = html.replace(old, new)
+
+          css = '''
+<style id="hotel-name-standard-fix">
+  .hero{height:78px !important;}
+  .hero-content{padding:8px 14px 30px 14px !important;}
+  .title{
+    font-size:23px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    text-transform:uppercase !important;
+  }
+  .hero-bottom{height:24px !important;}
+  @media(max-width:560px){
+    .hero{height:78px !important;}
+    .title{font-size:19px !important;}
+  }
+</style>
+'''
+          if 'id="hotel-name-standard-fix"' not in html:
+              html = html.replace('</head>', css + '\n</head>', 1)
+
+          if html != original:
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit patch and remove workflow
+        run: |
+          rm -f .github/workflows/fix-hotel-name-header.yml
+          git config user.name "github-actions-bot"
+          git config user.email "actions@github.com"
+          git add index.html .github/workflows/fix-hotel-name-header.yml
+          git diff --cached --quiet || git commit -m "Standardize hotel name and header sizing"
+          git push
