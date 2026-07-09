@@ -32,10 +32,12 @@ jobs:
           html = p.read_text(encoding='utf-8')
           html = html.replace('Bird of Paradise Hotel &amp; Resort', 'HOTEL PARADISE')
           html = html.replace('Bird of Paradise Hotel & Resort', 'HOTEL PARADISE')
-          html = html.replace('patch-roomtype-mini.css?v=6', 'patch-roomtype-mini.css?v=7')
-          html = html.replace('patch-roomtype-mini.js?v=6', 'patch-roomtype-mini.js?v=7')
-          if 'patch-roomtype-mini.css?v=7' not in html:
-              html = html.replace('</head>', '<link rel="stylesheet" href="patch-roomtype-mini.css?v=7">\n<script src="patch-roomtype-mini.js?v=7" defer></script>\n</head>')
+          html = html.replace('patch-roomtype-mini.css?v=6', 'patch-roomtype-mini.css?v=8')
+          html = html.replace('patch-roomtype-mini.js?v=6', 'patch-roomtype-mini.js?v=8')
+          html = html.replace('patch-roomtype-mini.css?v=7', 'patch-roomtype-mini.css?v=8')
+          html = html.replace('patch-roomtype-mini.js?v=7', 'patch-roomtype-mini.js?v=8')
+          if 'patch-roomtype-mini.css?v=8' not in html:
+              html = html.replace('</head>', '<link rel="stylesheet" href="patch-roomtype-mini.css?v=8">\n<script src="patch-roomtype-mini.js?v=8" defer></script>\n</head>')
           p.write_text(html, encoding='utf-8')
           PY
 
