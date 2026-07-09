@@ -34,7 +34,7 @@ jobs:
           html = p.read_text(encoding='utf-8')
 
           # Standardize hotel name across all pages.
-          for old in ['Bird of Paradise Hotel &amp; Resort', 'Bird of Paradise Hotel & Resort', 'Hotel Paradise', 'IFCA Garden Hotel']:
+          for old in ['Bird of Paradise Hotel &amp; Resort', 'Bird of Paradise Hotel & Resort', 'Hotel Paradise', 'IFCA Garden Hotel', '(UAT)-HOTEL PARADISE']:
               html = html.replace(old, 'HOTEL PARADISE')
 
           # Standard header sizing for all normal HotelX pages.
@@ -72,6 +72,45 @@ jobs:
           if 'form-border-fix-v2' not in html:
               html = html.replace('</style>', form_css + '\n</style>', 1)
 
+          # Room Type settings card and screen styling.
+          room_type_css = r'''
+          /* room-type-screen-v1 */
+          .room-type-page-card{background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 1px 4px #0002;overflow:hidden;margin-bottom:18px}.rt-section-title{height:46px;background:#fbf1e7;color:#f58220;font-size:17px;font-weight:900;display:flex;align-items:center;padding:0 14px}.rt-form{padding:22px 14px 12px}.rt-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px 14px}.rt-field{min-height:54px;border-bottom:1px solid #999;position:relative}.rt-field.full{grid-column:1/-1}.rt-label{font-size:14px;color:#888;font-weight:700;margin-bottom:7px}.rt-value{font-size:19px;color:#111;font-weight:700;min-height:24px}.rt-muted{color:#999}.rt-select:after{content:'expand_more';font-family:'Material Symbols Rounded';font-size:24px;color:#777;position:absolute;right:4px;bottom:8px}.rt-select .rt-value{padding-right:30px}.room-type-card-icon{color:#23a8e0}@media(max-width:720px){.rt-grid{grid-template-columns:1fr;gap:18px}.rt-field.full{grid-column:auto}.rt-form{padding:16px 12px}}
+          '''
+          if 'room-type-screen-v1' not in html:
+              html = html.replace('</style>', room_type_css + '\n</style>', 1)
+
+          # Add Room Type card under Hotel Settings.
+          room_type_card = '''<div class="card" id="roomTypeCard"><div class="card-icon"><span class="material-symbols-rounded feature-card-icon room-type-card-icon">hotel_class</span></div><div><div class="card-title">Room Type</div><div class="secondary">Room Type Setup.</div></div><div class="arrow">›</div></div>'''
+          if 'id="roomTypeCard"' not in html:
+              html = html.replace('<div class="card" id="roomStatusPolicyCard">', room_type_card + '<div class="card" id="roomStatusPolicyCard">', 1)
+
+          # Add Room Type detail screen.
+          room_type_section = r'''
+          <section class="page" id="roomTypePage">
+            <div class="hero"><div class="hero-content"><div class="kicker">HMS</div><div class="title">HOTEL PARADISE</div></div><div class="hero-bottom"><span>... / ... / DLQ</span><span>Edit</span></div></div>
+            <div class="room-type-page-card">
+              <div class="rt-section-title">Room Type</div>
+              <div class="rt-form">
+                <div class="rt-grid">
+                  <div class="rt-field"><div class="rt-label">Code *</div><div class="rt-value rt-muted">DLQ</div></div>
+                  <div class="rt-field"><div class="rt-label">Total Room</div><div class="rt-value rt-muted">8</div></div>
+                  <div class="rt-field full"><div class="rt-label">Description</div><div class="rt-value">DELUXE QUEEN</div></div>
+                  <div class="rt-field rt-select"><div class="rt-label">Property Type</div><div class="rt-value">Room</div></div>
+                  <div class="rt-field rt-select"><div class="rt-label">Measure Type</div><div class="rt-value">Square Metre</div></div>
+                  <div class="rt-field"><div class="rt-label">Room Size</div><div class="rt-value">100</div></div>
+                  <div class="rt-field"><div class="rt-label">Max Guest *</div><div class="rt-value">4</div></div>
+                  <div class="rt-field"><div class="rt-label">House Limit</div><div class="rt-value">100.00</div></div>
+                  <div class="rt-field"><div class="rt-label"></div><div class="rt-value rt-muted">Housekeeping Points</div></div>
+                  <div class="rt-field full"><div class="rt-label">Overbooking Allowed</div><div class="rt-value">5</div></div>
+                </div>
+              </div>
+            </div>
+          </section>
+          '''
+          if 'id="roomTypePage"' not in html:
+              html = html.replace('<section class="page" id="onDutyPage">', room_type_section + '\n<section class="page" id="onDutyPage">', 1)
+
           # Business Insights dashboard styles, using the same standard orange header as other screens.
           bi_css = r'''
           /* bi-standard-css-v2 */
@@ -97,8 +136,11 @@ jobs:
           elif digital != -1:
               html = html[:digital] + bi_section + '\n' + html[digital:]
 
+          # Wire click events.
           if 'businessInsightsMenu.onclick' not in html:
               html = html.replace('digitalMenu.onclick=()=>openPage(digitalPage);', 'if(window.businessInsightsMenu)businessInsightsMenu.onclick=()=>openPage(businessInsightsPage);digitalMenu.onclick=()=>openPage(digitalPage);')
+          if 'roomTypeCard.onclick' not in html:
+              html = html.replace('roomSetupCard.onclick=()=>openPage(roomsPage);', 'roomSetupCard.onclick=()=>openPage(roomsPage);if(window.roomTypeCard)roomTypeCard.onclick=()=>openPage(roomTypePage);')
 
           p.write_text(html, encoding='utf-8')
           PY
