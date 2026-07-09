@@ -1,0 +1,1 @@
+Trigger remove duplicate rooms from Maid Assignment Adjustment.
