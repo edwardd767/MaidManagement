@@ -26,6 +26,11 @@
       var d=el('digitalPage'); if(!d) return;
       d.innerHTML='<div class="hero"><div class="hero-content"><div class="kicker">HMS</div><div class="title">HOTEL PARADISE</div></div><div class="hero-bottom"><span>... / Digital Reporting</span><span>Digital Report</span></div></div><div class="toolbar"><span>Search here...</span><span>Housekeeping</span></div><div class="list"><div class="list-card report-card" id="reportCard"><div><div class="primary">Maid Productivity Listing</div><div class="secondary">Description</div></div><div class="arrow">›</div></div></div>';
     }
+    function ensureBI(){
+      var html='<section class="page" id="businessInsightsPage"><div class="hero"><div class="hero-content"><div class="kicker">HMS</div><div class="title">HOTEL PARADISE</div></div><div class="hero-bottom"><span>... / Business Insights</span><span>Maid Productivity Analysis</span></div></div><div class="bi-filters"><div class="bi-field"><div><div class="bi-label">Start Date</div><div class="bi-value">01 May 2026</div></div><span class="material-symbols-rounded">calendar_month</span></div><div class="bi-field"><div><div class="bi-label">End Date</div><div class="bi-value">09 Jul 2026</div></div><span class="material-symbols-rounded">calendar_month</span></div><div class="bi-field"><span class="material-symbols-rounded">search</span><div class="bi-value">Search maid...</div></div><div class="bi-field"><div><div class="bi-label">Analysis By</div><div class="bi-value">Maid</div></div><span class="material-symbols-rounded">expand_more</span></div></div><div class="bi-kpis"><div class="bi-kpi"><div class="bi-icon"><span class="material-symbols-rounded">cleaning_services</span></div><div><div class="bi-kpi-name">Maid On Duty</div><div class="bi-kpi-value">12</div></div></div><div class="bi-kpi"><div class="bi-icon"><span class="material-symbols-rounded">hotel</span></div><div><div class="bi-kpi-name">Rooms Cleaned</div><div class="bi-kpi-value">156</div></div></div><div class="bi-kpi"><div class="bi-icon"><span class="material-symbols-rounded">schedule</span></div><div><div class="bi-kpi-name">Avg Cleaning Time</div><div class="bi-kpi-value">24<span class="bi-small">min</span></div></div></div><div class="bi-kpi"><div class="bi-icon"><span class="material-symbols-rounded">workspace_premium</span></div><div><div class="bi-kpi-name">Total HK Points</div><div class="bi-kpi-value">1,245</div></div></div></div><div class="bi-chart"><div class="bi-chart-head"><span>Rooms Cleaned by Maid</span><span class="bi-date">01 May 2026 – 09 Jul 2026</span></div><div class="bi-plot"><div class="bi-y">Rooms Cleaned</div><div class="bi-bars"><div class="bi-bar" style="height:78%"><span>78</span></div><div class="bi-bar" style="height:64%"><span>64</span></div><div class="bi-bar" style="height:92%"><span>92</span></div><div class="bi-bar" style="height:54%"><span>54</span></div></div><div></div><div class="bi-xlabels"><span>Cassandra</span><span>Edward</span><span>Mark Goh</span><span>Syuhaidah</span></div><div></div><div class="bi-xname">Maid</div></div></div></section>';
+      if(el('businessInsightsPage')) el('businessInsightsPage').outerHTML=html;
+      else { var d=el('digitalPage'); if(d) d.insertAdjacentHTML('beforebegin', html); }
+    }
     function bind(){
       if(el('maidMenu')) el('maidMenu').onclick=function(){go('maidPage')};
       if(el('businessInsightsMenu')) el('businessInsightsMenu').onclick=function(){go('businessInsightsPage')};
@@ -34,7 +39,7 @@
       if(el('roomTypeCard')) el('roomTypeCard').onclick=function(){go('roomTypePage')};
       if(el('reportCard')) el('reportCard').onclick=function(){go('reportPage')};
     }
-    standardTitles(); cleanMenu(); ensureRoomType(); cleanDigital(); bind();
+    standardTitles(); cleanMenu(); ensureRoomType(); cleanDigital(); ensureBI(); bind();
     setTimeout(function(){ standardTitles(); ensureRoomType(); bind(); },500);
   });
 })();
