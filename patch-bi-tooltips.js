@@ -6,9 +6,8 @@
     'Avg Cleaning Time':'Avg Cleaning Time = total actual cleaning duration divided by completed rooms. Example: 3,744 minutes / 156 rooms = 24 min.',
     'Total HK Points':'Total HK Points = sum of housekeeping points for all completed rooms. Example: room HK points 10 x completed rooms, plus other room types.',
     'Avg Rooms / Maid':'Avg Rooms / Maid = completed rooms divided by maids on duty. Example: 156 / 12 = 13.0.',
-    'Completed Rooms':'Completed Rooms = count of rooms where Cleaning Status is Completed. Same logic as Rooms Cleaned.',
-    'In Progress':'In Progress = count of rooms where Cleaning Status is In Progress within the selected date range.',
-    'Est. vs Avg Cleaning Time':'Est. vs Avg Cleaning Time = room type estimated cleaning time compared with actual average cleaning time. Example: 20 / 24 min means actual is 4 minutes slower than estimate.',
+    'Unclean Room':'Unclean Room = count of rooms not yet cleaned or not marked as completed within the selected date range.',
+    'Avg Cleaning Time [Expected vs Actual]':'Avg Cleaning Time [Expected vs Actual] = room type expected cleaning time compared with actual average cleaning time. Example: 20 / 24 min means actual is 4 minutes slower than expected.',
     'Rooms Cleaned by Maid':'Rooms Cleaned by Maid = completed rooms grouped by maid. Example: Cassandra 78, Edward 64, Mark Goh 92.'
   };
   function getFloatingTip(){
@@ -56,5 +55,5 @@
     }
     var infoIcon=page.querySelector('.mbi-panel-info'); if(infoIcon) attach(infoIcon);
   }
-  ready(function(){ applyTips(); setTimeout(applyTips,800); setTimeout(applyTips,1700); });
+  ready(function(){ applyTips(); setTimeout(applyTips,800); setTimeout(applyTips,1700); setInterval(applyTips,2500); });
 })();
