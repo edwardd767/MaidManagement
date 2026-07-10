@@ -1,18 +1,16 @@
 (function(){
   function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
-  var iconSrc='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADsElEQVR4nO2YXWgcVRTH//fO7OzuzG7SLN1utqabMSWmbBXTBtRG+iJtkYogQl4kalMVSrGC+GJAYjsUQaH4ouiL/UDwQahUBCnoS0SoGFulUMGvmDRNC01jPjaT7Mdkrg/bm06XzSbYuzXo+cEwZ8653Dn3zLlnzgxAEARBEARBEARBEARBEARB/H9g9ZjU0BiKiwI7MuGGr19Mz0j9ox9ctX66VpyvNvY/xy+vtXznOrZ46aH41oTJ2bEnEj2uY4vTvak3AUDnDJZRl/j/++icwXVskTA5290eXf9MZ2xzRzIUjoU5cx17TT1uvR6TmgZjADD2esavZk9aGp9wF6va7jZc+YQMGO/PFGuNObu/+QxfI9mvLACGVl6RLwDOamfWlmToSc7WRgSUBUBW8uwGI1JpswZGmDUwwk5dmNsndfcmdEPVve8E5TXg6fvNHVLecHSULZQEOCtnxqnzuc+e3x47CQBtCb3xtxuliZXmq1Y0T5zPPffy55Mfq/BXeQDGpr1xKfd1xbe9d272R3nd3RrJSnk27xdWO+fQlcLxEz/k3i4somQZLHputDCsyl9lG1HnDJ4vsC7K2Xj/repvDYws3SP4NNNvXeazeX/FV6Lr2OKVLya3fjSU+1mVr0GU1QDv5lqmF3wxdKVwHAB+vVH6Utotg2FkyvsGAAaH88fmi2LV/UBfV7zfdWwhj7aEHlLlt3IiOkPC5KznASsT1HNWDsJTWfOe1S5ANk6uY4u9HWaqM22Y8ro+3ivAdWxxZFfTHuno7vboegDYaUfWSd3JnuSh1SyCM6CvK75lU6O+VKuSlsZVBkBpH/DVC83vA0AszBql/syzqQnXscXZ/c1TUjdX9KcB4NsDG2tWcl8A2VQoqwW8nFrwlXaQSvuA7tbIQQDIl8R8rbFtTaEHAWDbRqNX6iJ69Xp88JGG05debSnJzvH6G5mZqgP/IXX5FtjVHt1Xyx7SEK3U5b3qWd14eJTNHG4VuSO30r7tnTHtTn2UKAtAcJ/+Mel9v/PDaz2hm24WvPI5rAMhjbGje5p6ZbZ0pg2z8h9BEM8Xt71KVaNsC9yXDC3t+08vzn3CGeAWBdyigOeXD7coMFcQYnA4PyjHdrWE7cq59Lv4paQsAHs7oo9J+eFNke3LpbTnCzREeExep+NaKmg3NLbUUywXCJXxURaAP//yfpfy4x3RA5X2YJE71N3wrpQ1xm7bz8HfY94yjeLK/SNBEARBEARBEARBEARBEARBVONvMgg4A1JxKfwAAAAASUVORK5CYII=';
+  var maidSvg='<svg class="mbi-maid-duty-svg" viewBox="0 0 64 64" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="27" cy="10" r="5" fill="currentColor" stroke="none"/><path d="M20 18c2-4 5-6 9-6s7 2 9 6" fill="currentColor" stroke="none"/><path d="M22 20h14l5 25H17l5-25z" fill="currentColor" stroke="none"/><path d="M25 20l4 8 4-8" stroke="#fff3e6"/><path d="M19 24c-4 4-6 8-7 14"/><path d="M39 22c3 3 6 4 10 4"/><path d="M50 11v39"/><path d="M45 51h13l-2 8H47z" fill="currentColor" stroke="none"/><path d="M47 55h9" stroke="#fff3e6" stroke-width="2"/><path d="M12 37h9l-1 13h-9z" fill="currentColor" stroke="none"/><path d="M12 38c2 2 6 2 8 0" stroke="#fff3e6" stroke-width="2"/><path d="M24 45v14M35 45v14"/></g></svg>';
   function applyIcon(){
     var page=document.getElementById('businessInsightsPage');
     if(!page) return;
     page.querySelectorAll('.mbi-kpi').forEach(function(card){
       var label=card.querySelector('.mbi-kpi-title');
       var icon=card.querySelector('.mbi-icon');
-      if(label && icon && label.textContent.trim()==='Maid On Duty'){
-        if(!icon.querySelector('.mbi-maid-final-img')){
-          icon.innerHTML='<img class="mbi-maid-final-img" alt="Maid On Duty" src="'+iconSrc+'">';
-        }
+      if(label && icon && label.textContent.trim()==='Maid On Duty' && !icon.querySelector('.mbi-maid-duty-svg')){
+        icon.innerHTML=maidSvg;
       }
     });
   }
-  ready(function(){ applyIcon(); setTimeout(applyIcon,600); setTimeout(applyIcon,1400); setTimeout(applyIcon,2400); });
+  ready(function(){ applyIcon(); setTimeout(applyIcon,600); setTimeout(applyIcon,1500); setTimeout(applyIcon,2600); });
 })();
