@@ -52,8 +52,9 @@ jobs:
               html = html.replace(f'<link rel="stylesheet" href="patch-bi-maid-icon-fixed.css?v={old}">\n', '')
               html = html.replace(f'<script src="patch-bi-maid-icon-fixed.js?v={old}" defer></script>\n', '')
               html = html.replace(f'<script src="patch-bi-maid-icon.js?v={old}" defer></script>\n', '')
-          html = html.replace('patch-bi-maid-duty-final.css?v=1', 'patch-bi-maid-duty-final.css?v=2')
-          html = html.replace('patch-bi-maid-duty-final.js?v=1', 'patch-bi-maid-duty-final.js?v=2')
+          for old in ['1','2']:
+              html = html.replace(f'patch-bi-maid-duty-final.css?v={old}', 'patch-bi-maid-duty-final.css?v=3')
+              html = html.replace(f'patch-bi-maid-duty-final.js?v={old}', 'patch-bi-maid-duty-final.js?v=3')
 
           for old in ['1','2','3']:
               html = html.replace(f'patch-nav-click-fix.js?v={old}', 'patch-nav-click-fix.js?v=4')
@@ -68,8 +69,8 @@ jobs:
               html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-tooltips.css?v=4">\n<script src="patch-bi-tooltips.js?v=4" defer></script>\n</head>')
           if 'patch-bi-label.js?v=2' not in html:
               html = html.replace('</head>', '<script src="patch-bi-label.js?v=2" defer></script>\n</head>')
-          if 'patch-bi-maid-duty-final.css?v=2' not in html:
-              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-maid-duty-final.css?v=2">\n<script src="patch-bi-maid-duty-final.js?v=2" defer></script>\n</head>')
+          if 'patch-bi-maid-duty-final.css?v=3' not in html:
+              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-maid-duty-final.css?v=3">\n<script src="patch-bi-maid-duty-final.js?v=3" defer></script>\n</head>')
           if 'patch-nav-click-fix.js?v=4' not in html:
               html = html.replace('</head>', '<script src="patch-nav-click-fix.js?v=4" defer></script>\n</head>')
           p.write_text(html, encoding='utf-8')
