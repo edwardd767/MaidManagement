@@ -1,22 +1,69 @@
-@media (min-width: 992px){
-  #businessInsightsPage{
-    zoom:0.90;
-    width:111.111%;
-    max-width:111.111%;
-    transform-origin:top left;
+/* Desktop compact layout without browser zoom or width expansion. */
+#businessInsightsPage{
+  zoom:1!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  transform:none!important;
+  overflow-x:hidden!important;
+}
+#businessInsightsPage .mbix-wrap,
+#businessInsightsPage .mbix-header,
+#businessInsightsPage .mbix-filters,
+#businessInsightsPage .mbix-kpis,
+#businessInsightsPage .mbix-content-grid{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+}
+@media (min-width:1100px){
+  #businessInsightsPage .mbix-kpis{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+  #businessInsightsPage .mbix-kpi{
+    height:174px!important;
+  }
+  #businessInsightsPage .mbix-kpi-main{
+    height:133px!important;
+    padding:16px 12px!important;
+    gap:11px!important;
+  }
+  #businessInsightsPage .mbix-kpi-icon{
+    width:52px!important;
+    height:52px!important;
+  }
+  #businessInsightsPage .mbix-kpi-icon>.material-symbols-rounded{
+    font-size:32px!important;
+  }
+  #businessInsightsPage .mbix-kpi h3{
+    font-size:13px!important;
+    white-space:normal!important;
+  }
+  #businessInsightsPage .mbix-kpi strong{
+    font-size:36px!important;
+  }
+  #businessInsightsPage .mbix-kpi-foot{
+    height:41px!important;
+    padding:0 12px!important;
+    font-size:11px!important;
+  }
+  #businessInsightsPage .mbix-big-thumb{
+    width:38px!important;
+    height:38px!important;
+    font-size:24px!important;
+  }
+  #businessInsightsPage .mbix-content-grid{
+    grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)!important;
   }
 }
-@media (min-width: 1600px){
-  #businessInsightsPage{
-    zoom:0.92;
-    width:108.696%;
-    max-width:108.696%;
+@media (max-width:1099px) and (min-width:701px){
+  #businessInsightsPage .mbix-kpis{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
   }
 }
-@media (max-width: 991px){
-  #businessInsightsPage{
-    zoom:1;
-    width:100%;
-    max-width:100%;
+@media (max-width:700px){
+  #businessInsightsPage .mbix-kpis{
+    grid-template-columns:1fr!important;
   }
 }
