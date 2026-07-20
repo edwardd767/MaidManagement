@@ -51,11 +51,14 @@
     '</section>';
 
     var old=document.getElementById('businessInsightsPage');
+    var wasActive=!!(old&&old.classList.contains('active'));
     if(old) old.outerHTML=html;
     else {
       var digital=document.getElementById('digitalPage');
       if(digital) digital.insertAdjacentHTML('beforebegin',html);
     }
+    var rendered=document.getElementById('businessInsightsPage');
+    if(wasActive&&rendered) rendered.classList.add('active');
     var menu=document.getElementById('businessInsightsMenu');
     if(menu) menu.onclick=function(){var page=document.getElementById('businessInsightsPage');if(page&&typeof openPage==='function')openPage(page);};
   }
