@@ -1,0 +1,53 @@
+/* Mobile BI KPI cards remain in one horizontal row and can be swiped. */
+@media (max-width:1199px){
+  #businessInsightsPage .mbix-kpis{
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    gap:10px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    padding:2px 2px 10px!important;
+    scrollbar-width:thin;
+  }
+  #businessInsightsPage .mbix-kpi{
+    flex:0 0 230px!important;
+    min-width:230px!important;
+    max-width:230px!important;
+    scroll-snap-align:start;
+  }
+}
+@media (max-width:700px){
+  #businessInsightsPage .mbix-kpis{
+    grid-template-columns:none!important;
+  }
+  #businessInsightsPage .mbix-kpi{
+    flex-basis:218px!important;
+    min-width:218px!important;
+    max-width:218px!important;
+    height:168px!important;
+  }
+  #businessInsightsPage .mbix-kpi-main{
+    height:128px!important;
+    padding:15px 10px 12px!important;
+    gap:8px!important;
+  }
+  #businessInsightsPage .mbix-kpi-icon{
+    width:44px!important;
+    height:44px!important;
+    flex:0 0 44px!important;
+  }
+  #businessInsightsPage .mbix-kpi h3{
+    font-size:12px!important;
+    margin-right:18px!important;
+  }
+  #businessInsightsPage .mbix-kpi strong{
+    font-size:32px!important;
+  }
+  #businessInsightsPage .mbix-kpi-foot{
+    height:40px!important;
+    padding:0 9px!important;
+    font-size:10px!important;
+  }
+}
