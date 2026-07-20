@@ -45,7 +45,7 @@ jobs:
           html = re.sub(r'patch-bi-modern\.css\?v=\d+', 'patch-bi-modern.css?v=14', html)
           html = re.sub(r'patch-bi-modern\.js\?v=\d+', 'patch-bi-modern.js?v=14', html)
           html = re.sub(r'patch-bi-search\.css\?v=\d+', 'patch-bi-search.css?v=2', html)
-          html = re.sub(r'patch-bi-compact\.css\?v=\d+', 'patch-bi-compact.css?v=2', html)
+          html = re.sub(r'patch-bi-compact\.css\?v=\d+', 'patch-bi-compact.css?v=3', html)
 
           for old in ['1','2','3','4']:
               html = html.replace(f'<script src="patch-bi-maid-image.js?v={old}" defer></script>\n', '')
@@ -66,8 +66,8 @@ jobs:
               html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-modern.css?v=14">\n<script src="patch-bi-modern.js?v=14" defer></script>\n</head>')
           if 'patch-bi-search.css?v=2' not in html:
               html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-search.css?v=2">\n</head>')
-          if 'patch-bi-compact.css?v=2' not in html:
-              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-compact.css?v=2">\n</head>')
+          if 'patch-bi-compact.css?v=3' not in html:
+              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-compact.css?v=3">\n</head>')
           if 'patch-bi-tooltips.css?v=6' not in html:
               html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-tooltips.css?v=6">\n<script src="patch-bi-tooltips.js?v=6" defer></script>\n</head>')
           if 'patch-bi-label.js?v=2' not in html:
