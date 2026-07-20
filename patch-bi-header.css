@@ -1,0 +1,9 @@
+#businessInsightsPage .mbix-heading{justify-content:flex-start!important}
+#businessInsightsPage .mbix-heading .mbix-date{display:none!important}
+#businessInsightsPage .mbix-filters{grid-template-columns:minmax(300px,390px) minmax(0,1fr)!important}
+#businessInsightsPage .mbix-filters>.mbix-filter:first-child{white-space:nowrap}
+#businessInsightsPage .mbix-filters>.mbix-filter:first-child b{overflow:hidden;text-overflow:ellipsis}
+@media(max-width:700px){
+  #businessInsightsPage .mbix-filters{grid-template-columns:1fr!important}
+  #businessInsightsPage .mbix-filters>.mbix-filter:first-child{white-space:normal}
+}
