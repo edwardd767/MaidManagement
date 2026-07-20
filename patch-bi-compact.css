@@ -1,4 +1,4 @@
-/* Responsive Business Insights layout without browser zoom or width expansion. */
+/* Business Insights: keep five KPI cards in one desktop row without zoom or overflow. */
 #businessInsightsPage{
   zoom:1!important;
   width:100%!important;
@@ -24,71 +24,118 @@
 }
 #businessInsightsPage .mbix-kpi h3{
   white-space:normal!important;
-  overflow-wrap:anywhere;
-  line-height:1.2!important;
-  padding-right:22px;
-}
-#businessInsightsPage .mbix-info{
-  right:10px!important;
-  top:12px!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  line-height:1.15!important;
 }
 #businessInsightsPage .mbix-kpi-foot span:first-child{
   min-width:0;
-  overflow-wrap:anywhere;
-  line-height:1.2;
+  line-height:1.15;
 }
 
-/* Only use five columns when the content area is genuinely wide enough. */
-@media (min-width:1800px){
+/* Desktop: all five KPI cards stay on one row. */
+@media (min-width:1200px){
   #businessInsightsPage .mbix-kpis{
     grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    gap:12px!important;
-  }
-}
-
-/* Standard desktop: three cards on the first row and two on the second. */
-@media (min-width:1200px) and (max-width:1799px){
-  #businessInsightsPage .mbix-kpis{
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    gap:14px!important;
+    gap:8px!important;
   }
   #businessInsightsPage .mbix-kpi{
-    height:184px!important;
+    height:168px!important;
   }
   #businessInsightsPage .mbix-kpi-main{
-    height:141px!important;
-    padding:18px 16px!important;
-    gap:14px!important;
+    height:128px!important;
+    padding:15px 9px 12px!important;
+    gap:8px!important;
+    align-items:flex-start!important;
   }
   #businessInsightsPage .mbix-kpi-icon{
-    width:58px!important;
-    height:58px!important;
+    width:44px!important;
+    height:44px!important;
+    flex:0 0 44px!important;
   }
   #businessInsightsPage .mbix-kpi-icon>.material-symbols-rounded{
-    font-size:35px!important;
+    font-size:28px!important;
   }
   #businessInsightsPage .mbix-kpi h3{
-    font-size:14px!important;
+    margin:1px 20px 7px 0!important;
+    padding-right:0!important;
+    font-size:12px!important;
+    min-height:28px!important;
   }
   #businessInsightsPage .mbix-kpi strong{
-    font-size:40px!important;
+    font-size:32px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+  }
+  #businessInsightsPage .mbix-unit,
+  #businessInsightsPage .mbix-inline-unit{
+    font-size:11px!important;
+  }
+  #businessInsightsPage .mbix-unit{
+    margin-top:7px!important;
+  }
+  #businessInsightsPage .mbix-inline-unit{
+    display:block!important;
+    margin:6px 0 0!important;
+  }
+  #businessInsightsPage .mbix-info{
+    right:7px!important;
+    top:9px!important;
+    font-size:17px!important;
   }
   #businessInsightsPage .mbix-kpi-foot{
-    height:43px!important;
-    padding:0 15px!important;
-    font-size:12px!important;
+    height:40px!important;
+    padding:0 9px!important;
+    gap:5px!important;
+    font-size:10px!important;
+  }
+  #businessInsightsPage .mbix-kpi-foot .material-symbols-rounded{
+    font-size:18px!important;
+    flex:0 0 auto!important;
+  }
+  #businessInsightsPage .mbix-clean-time>div:nth-child(2){
+    gap:3px!important;
+  }
+  #businessInsightsPage .mbix-clean-time small{
+    font-size:10px!important;
   }
   #businessInsightsPage .mbix-big-thumb{
-    width:42px!important;
-    height:42px!important;
-    font-size:26px!important;
+    width:32px!important;
+    height:32px!important;
+    flex:0 0 32px!important;
+    font-size:20px!important;
+    margin-left:auto!important;
+  }
+  #businessInsightsPage .mbix-expected{
+    grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr)!important;
+    gap:5px!important;
+    margin-top:5px!important;
+    font-size:8px!important;
+  }
+  #businessInsightsPage .mbix-expected b{
+    font-size:9px!important;
+    margin-top:2px!important;
+    white-space:nowrap!important;
+  }
+  #businessInsightsPage .mbix-expected i{
+    height:25px!important;
   }
   #businessInsightsPage .mbix-content-grid{
     grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr)!important;
   }
 }
 
-/* Smaller desktop and tablet landscape. */
+/* Slightly roomier cards on very wide monitors. */
+@media (min-width:1550px){
+  #businessInsightsPage .mbix-kpis{gap:12px!important;}
+  #businessInsightsPage .mbix-kpi-main{padding:17px 13px 13px!important;gap:11px!important;}
+  #businessInsightsPage .mbix-kpi-icon{width:50px!important;height:50px!important;flex-basis:50px!important;}
+  #businessInsightsPage .mbix-kpi-icon>.material-symbols-rounded{font-size:31px!important;}
+  #businessInsightsPage .mbix-kpi h3{font-size:13px!important;}
+  #businessInsightsPage .mbix-kpi strong{font-size:36px!important;}
+  #businessInsightsPage .mbix-kpi-foot{padding:0 12px!important;font-size:11px!important;}
+}
+
 @media (min-width:701px) and (max-width:1199px){
   #businessInsightsPage .mbix-kpis{
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
