@@ -28,6 +28,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           p = Path('index.html')
           html = p.read_text(encoding='utf-8')
           html = html.replace('Bird of Paradise Hotel &amp; Resort', 'HOTEL PARADISE')
@@ -42,9 +43,8 @@ jobs:
               html = html.replace(f'patch-bi-tooltips.css?v={old}', 'patch-bi-tooltips.css?v=5')
               html = html.replace(f'patch-bi-tooltips.js?v={old}', 'patch-bi-tooltips.js?v=5')
           html = html.replace('patch-bi-label.js?v=1', 'patch-bi-label.js?v=2')
-          for old in ['1','2','3','4','5','6','7','8','9']:
-              html = html.replace(f'patch-bi-modern.css?v={old}', 'patch-bi-modern.css?v=10')
-              html = html.replace(f'patch-bi-modern.js?v={old}', 'patch-bi-modern.js?v=10')
+          html = re.sub(r'patch-bi-modern\\.css\\?v=\\d+', 'patch-bi-modern.css?v=10', html)
+          html = re.sub(r'patch-bi-modern\\.js\\?v=\\d+', 'patch-bi-modern.js?v=10', html)
 
           for old in ['1','2','3','4']:
               html = html.replace(f'<script src="patch-bi-maid-image.js?v={old}" defer></script>\n', '')
