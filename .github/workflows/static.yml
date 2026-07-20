@@ -50,7 +50,7 @@ jobs:
           html = re.sub(r'patch-bi-header\.js\?v=\d+', 'patch-bi-header.js?v=1', html)
           html = re.sub(r'patch-bi-remove-daily\.js\?v=\d+', 'patch-bi-remove-daily.js?v=1', html)
           html = re.sub(r'patch-bi-formula-tooltips\.css\?v=\d+', 'patch-bi-formula-tooltips.css?v=2', html)
-          html = re.sub(r'patch-bi-formula-tooltips\.js\?v=\d+', 'patch-bi-formula-tooltips.js?v=2', html)
+          html = re.sub(r'patch-bi-formula-tooltips\.js\?v=\d+', 'patch-bi-formula-tooltips.js?v=3', html)
           html = re.sub(r'patch-bi-mobile-kpis\.css\?v=\d+', 'patch-bi-mobile-kpis.css?v=1', html)
 
           for old in ['1','2','3','4']:
@@ -79,7 +79,9 @@ jobs:
           if 'patch-bi-remove-daily.js?v=1' not in html:
               html = html.replace('</head>', '<script src="patch-bi-remove-daily.js?v=1" defer></script>\n</head>')
           if 'patch-bi-formula-tooltips.css?v=2' not in html:
-              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-formula-tooltips.css?v=2">\n<script src="patch-bi-formula-tooltips.js?v=2" defer></script>\n</head>')
+              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-formula-tooltips.css?v=2">\n</head>')
+          if 'patch-bi-formula-tooltips.js?v=3' not in html:
+              html = html.replace('</head>', '<script src="patch-bi-formula-tooltips.js?v=3" defer></script>\n</head>')
           if 'patch-bi-mobile-kpis.css?v=1' not in html:
               html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-mobile-kpis.css?v=1">\n</head>')
           if 'patch-bi-tooltips.css?v=6' not in html:
