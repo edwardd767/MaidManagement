@@ -62,4 +62,6 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',renderBI);
   else renderBI();
   setTimeout(renderBI,500);
+  setTimeout(renderBI,1400);
+  setTimeout(renderBI,2600);
 })();
