@@ -1,19 +1,29 @@
 (function(){
   function renderBI(){
+    var expectedAvg=30;
+    var actualAvg=24;
+    function performanceStatus(actual, expected){
+      if(actual < expected) return 'up';
+      if(actual > expected) return 'down';
+      return 'neutral';
+    }
+    function performanceSymbol(status){
+      return status==='up'?'thumb_up':status==='down'?'thumb_down':'remove';
+    }
+    var topStatus=performanceStatus(actualAvg,expectedAvg);
     var rows=[
-      ['SN','Siti Nurhaliza',28,21,'236','up'],
-      ['AM','Aisyah Mohamed',24,23,'214','up'],
-      ['WK','Wong Kar Mei',22,25,'198','up'],
-      ['LM','Lim Mei Ling',20,27,'176','neutral'],
-      ['JH','Julia Hassan',18,30,'162','down']
+      ['SN','Siti Nurhaliza',28,21,'up'],
+      ['AM','Aisyah Mohamed',24,23,'up'],
+      ['WK','Wong Kar Mei',22,25,'up'],
+      ['LM','Lim Mei Ling',20,27,'neutral'],
+      ['JH','Julia Hassan',18,30,'down']
     ];
     var rowHtml=rows.map(function(r){
-      var symbol=r[5]==='up'?'thumb_up':r[5]==='down'?'thumb_down':'remove';
+      var symbol=performanceSymbol(r[4]);
       return '<div class="mbix-table-row">'+
-        '<div class="mbix-maid"><span class="mbix-avatar '+r[5]+'">'+r[0]+'</span><b>'+r[1]+'</b></div>'+
+        '<div class="mbix-maid"><span class="mbix-avatar '+r[4]+'">'+r[0]+'</span><b>'+r[1]+'</b></div>'+
         '<div class="mbix-room-count">'+r[2]+'</div>'+
-        '<div class="mbix-time-wrap"><span class="mbix-time '+r[5]+'">'+r[3]+' min</span><span class="material-symbols-rounded mbix-result '+r[5]+'">'+symbol+'</span></div>'+
-        '<div class="mbix-points">'+r[4]+'<span class="material-symbols-rounded mbix-result '+r[5]+'">'+symbol+'</span></div>'+
+        '<div class="mbix-time-wrap"><span class="mbix-time '+r[4]+'">'+r[3]+' min</span><span class="material-symbols-rounded mbix-result '+r[4]+'">'+symbol+'</span></div>'+
       '</div>';
     }).join('');
 
@@ -28,9 +38,10 @@
           '<div class="mbix-filter mbix-search"><span class="material-symbols-rounded">search</span><span>Search maid...</span></div>'+
         '</div>'+
         '<div class="mbix-kpis">'+
+          '<article class="mbix-kpi orange"><span class="material-symbols-rounded mbix-info" data-tip="Maid On Duty = distinct count of maids marked on duty within the selected date range">info</span><div class="mbix-kpi-main"><div class="mbix-kpi-icon"><span class="material-symbols-rounded">support_agent</span></div><div><h3>Maid On Duty</h3><strong>12</strong><span class="mbix-unit">Maids</span></div></div><div class="mbix-kpi-foot"><span>Active maids on shift</span><span class="material-symbols-rounded">check_circle</span></div></article>'+
           '<article class="mbix-kpi green"><span class="material-symbols-rounded mbix-info" data-tip="Completed Rooms = completed cleaning records within the selected date range">info</span><div class="mbix-kpi-main"><div class="mbix-kpi-icon"><span class="material-symbols-rounded">bed</span></div><div><h3>Completed Rooms</h3><strong>156</strong><span class="mbix-unit">Rooms</span></div></div><div class="mbix-kpi-foot"><span>Total rooms cleaned</span><span class="material-symbols-rounded">check_circle</span></div></article>'+
           '<article class="mbix-kpi amber"><span class="material-symbols-rounded mbix-info" data-tip="Uncleaned Rooms = pending + assigned + in-progress rooms at the selected end date">info</span><div class="mbix-kpi-main"><div class="mbix-kpi-icon"><span class="material-symbols-rounded">bedroom_parent</span></div><div><h3>Uncleaned Rooms</h3><strong>14</strong><span class="mbix-unit">Rooms</span></div></div><div class="mbix-kpi-foot"><span>Needs attention</span><span class="material-symbols-rounded">group</span></div></article>'+
-          '<article class="mbix-kpi blue"><span class="material-symbols-rounded mbix-info" data-tip="Actual average = total cleaning minutes divided by completed rooms; compared with the weighted expected room-type time">info</span><div class="mbix-kpi-main"><div class="mbix-kpi-icon"><span class="material-symbols-rounded">timer</span></div><div class="mbix-clean-time"><h3>Avg Cleaning Time</h3><div><strong>24</strong><small>min</small><span class="material-symbols-rounded mbix-big-thumb">thumb_up</span></div><div class="mbix-expected"><span>Expected<b>30 min</b></span><i></i><span>Actual<b>24 min</b></span></div></div></div><div class="mbix-kpi-foot"><span>Performance: 20.0% better</span><span class="material-symbols-rounded">trending_up</span></div></article>'+
+          '<article class="mbix-kpi blue"><span class="material-symbols-rounded mbix-info" data-tip="Actual average = total cleaning minutes divided by completed rooms; compared with the weighted expected room-type time">info</span><div class="mbix-kpi-main"><div class="mbix-kpi-icon"><span class="material-symbols-rounded">timer</span></div><div class="mbix-clean-time"><h3>Avg Cleaning Time</h3><div><strong>'+actualAvg+'</strong><small>min</small><span class="material-symbols-rounded mbix-big-thumb '+topStatus+'">'+performanceSymbol(topStatus)+'</span></div><div class="mbix-expected"><span>Expected<b>'+expectedAvg+' min</b></span><i></i><span>Actual<b>'+actualAvg+' min</b></span></div></div></div><div class="mbix-kpi-foot"><span>Performance: 20.0% better</span><span class="material-symbols-rounded">trending_up</span></div></article>'+
           '<article class="mbix-kpi purple"><span class="material-symbols-rounded mbix-info" data-tip="Total HK Points = sum of room-type housekeeping points for completed rooms in the selected date range">info</span><div class="mbix-kpi-main"><div class="mbix-kpi-icon"><span class="material-symbols-rounded">workspace_premium</span></div><div><h3>Total HK Points</h3><strong>1,245</strong><span class="mbix-inline-unit">Points</span></div></div><div class="mbix-kpi-foot"><span>Quality score for this period</span><span class="material-symbols-rounded">emoji_events</span></div></article>'+
         '</div>'+
         '<div class="mbix-content-grid">'+
@@ -42,7 +53,7 @@
           '</article>'+
           '<article class="mbix-panel mbix-table">'+
             '<div class="mbix-panel-head"><div><h2>Rooms Cleaned by Maid <span class="material-symbols-rounded" data-tip="Completed rooms and average time grouped by maid for the selected date range">info</span></h2><p>Selected date range</p></div></div>'+
-            '<div class="mbix-table-head"><div>Maid</div><div>Rooms Cleaned</div><div>Avg Cleaning Time</div><div>HK Points</div></div>'+
+            '<div class="mbix-table-head"><div>Maid</div><div>Rooms Cleaned</div><div>Avg Cleaning Time</div></div>'+
             rowHtml+
             '<div class="mbix-view">View all maids <span class="material-symbols-rounded">chevron_right</span></div>'+
           '</article>'+
