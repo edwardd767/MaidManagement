@@ -1,1 +1,0 @@
-Trigger standard hotel name and header size fix.

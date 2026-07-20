@@ -1,1 +1,0 @@
-Redeploy trigger for Room Status Policy card and page update. Failed patch workflows removed.

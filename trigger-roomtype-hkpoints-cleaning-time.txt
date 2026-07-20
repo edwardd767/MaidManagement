@@ -1,1 +1,0 @@
-Trigger Room Type update: Housekeeping Points = 10 and Estimated Cleaning Time(Mins) = 20.

@@ -1,1 +1,0 @@
-Trigger deployment using patch-roomtype-mini assets.
