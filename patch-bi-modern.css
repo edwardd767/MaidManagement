@@ -1,1 +1,60 @@
 #businessInsightsPage .mbi-wrap{padding:0 0 22px}#businessInsightsPage .mbi-filters{display:grid;gap:14px;margin:14px 0 16px}#businessInsightsPage .mbi-filters-two{grid-template-columns:1fr 1.8fr}#businessInsightsPage .mbi-filter{height:64px;background:#fff;border:1px solid #e8e8e8;border-radius:14px;box-shadow:0 8px 22px rgba(0,0,0,.07);display:flex;align-items:center;gap:12px;padding:10px 14px}#businessInsightsPage .mbi-filter .material-symbols-rounded{font-size:26px;color:#f58220}#businessInsightsPage .mbi-filter-arrow{margin-left:auto}#businessInsightsPage .mbi-label{font-size:12px;color:#8b8f98;font-weight:800;line-height:1}#businessInsightsPage .mbi-value{font-size:16px;color:#111827;font-weight:900;margin-top:6px;white-space:nowrap}#businessInsightsPage .mbi-search .mbi-value{color:#a0a4ad;font-weight:800;margin-top:0}#businessInsightsPage .mbi-kpi-grid{display:grid;gap:14px;margin-bottom:16px}#businessInsightsPage .mbi-kpi-five{grid-template-columns:repeat(5,1fr)}#businessInsightsPage .mbi-kpi{position:relative;overflow:visible;background:#fff;border:1px solid #eee;border-radius:18px;box-shadow:0 10px 26px rgba(0,0,0,.08);padding:18px;min-height:150px;display:flex;align-items:center;gap:14px}#businessInsightsPage .mbi-kpi:after{content:'';position:absolute;right:-22px;top:-28px;width:92px;height:92px;border-radius:50%;opacity:.12;background:currentColor}#businessInsightsPage .mbi-kpi.orange{color:#f58220}#businessInsightsPage .mbi-kpi.green{color:#13a85a}#businessInsightsPage .mbi-kpi.amber{color:#e79b00}#businessInsightsPage .mbi-kpi.blue{color:#1673e6}#businessInsightsPage .mbi-kpi.purple{color:#7d39d6}#businessInsightsPage .mbi-icon{width:58px;height:58px;border-radius:18px;background:rgba(245,130,32,.12);display:flex;align-items:center;justify-content:center;flex:0 0 auto}#businessInsightsPage .mbi-kpi.green .mbi-icon{background:rgba(19,168,90,.12)}#businessInsightsPage .mbi-kpi.amber .mbi-icon{background:rgba(231,155,0,.12)}#businessInsightsPage .mbi-kpi.blue .mbi-icon{background:rgba(22,115,230,.12)}#businessInsightsPage .mbi-kpi.purple .mbi-icon{background:rgba(125,57,214,.12)}#businessInsightsPage .mbi-icon .material-symbols-rounded{font-size:34px;color:currentColor}#businessInsightsPage .mbi-kpi-title{font-size:13px;color:#667085;font-weight:900;margin-bottom:7px}#businessInsightsPage .mbi-kpi-number{font-size:36px;line-height:1;color:currentColor;font-weight:1000}#businessInsightsPage .mbi-kpi-unit{font-size:14px;color:#111827;font-weight:800;margin-left:4px}#businessInsightsPage .mbi-kpi-unitline{font-size:13px;color:#667085;font-weight:800;margin-top:8px}#businessInsightsPage .mbi-compare{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:10px;font-size:11px;color:#667085;font-weight:800}#businessInsightsPage .mbi-good{color:#13a85a!important;font-size:26px!important}#businessInsightsPage .mbi-lower{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px}#businessInsightsPage .mbi-panel{background:#fff;border:1px solid #ececec;border-radius:18px;box-shadow:0 10px 28px rgba(0,0,0,.08);padding:18px 20px;margin-bottom:16px}#businessInsightsPage .mbi-panel-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}#businessInsightsPage .mbi-panel-title{font-size:20px;font-weight:1000;color:#111827}#businessInsightsPage .mbi-panel-sub{font-size:13px;color:#8b8f98;font-weight:800;margin-top:3px}#businessInsightsPage .mbi-pill{background:#fff7ef;border:1px solid #ffd3ad;border-radius:10px;padding:7px 12px;font-weight:900;color:#f58220}#businessInsightsPage .mbi-line-chart{height:290px;border-left:2px solid #9ca3af;border-bottom:2px solid #9ca3af;background:repeating-linear-gradient(to top,transparent 0,transparent 54px,#eef0f3 55px);position:relative;margin:0 10px 42px 36px}#businessInsightsPage .mbi-line{position:absolute;left:0;right:0;height:4px;border-radius:999px;transform-origin:left center}#businessInsightsPage .mbi-line.expected{top:34%;background:linear-gradient(90deg,#ff7a00,#ff9b18,#f58220);clip-path:polygon(0 40%,10% 55%,20% 35%,30% 58%,40% 30%,50% 46%,60% 28%,70% 52%,80% 36%,90% 42%,100% 32%,100% 60%,90% 58%,80% 54%,70% 68%,60% 44%,50% 62%,40% 46%,30% 74%,20% 50%,10% 70%,0 56%)}#businessInsightsPage .mbi-line.actual{top:58%;background:linear-gradient(90deg,#0d8f4d,#18b965,#0d8f4d);clip-path:polygon(0 45%,10% 38%,20% 64%,30% 51%,40% 35%,50% 61%,60% 37%,70% 66%,80% 48%,90% 55%,100% 44%,100% 60%,90% 70%,80% 61%,70% 79%,60% 53%,50% 75%,40% 48%,30% 65%,20% 79%,10% 55%,0 60%)}#businessInsightsPage .mbi-axis-labels{position:absolute;left:0;right:0;bottom:-34px;display:flex;justify-content:space-between;font-size:11px;color:#667085;font-weight:800}#businessInsightsPage .mbi-trend-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}#businessInsightsPage .mbi-trend-cards>div{border-radius:14px;padding:12px;background:#f7faf8;display:flex;flex-direction:column;gap:4px}#businessInsightsPage .mbi-trend-cards>div:nth-child(2){background:#fff6f1}#businessInsightsPage .mbi-trend-cards>div:nth-child(3){background:#f3f7ff}#businessInsightsPage .mbi-trend-cards b{font-size:12px}#businessInsightsPage .mbi-trend-cards span{font-size:11px;color:#667085}#businessInsightsPage .mbi-trend-cards strong{font-size:22px;color:#13a85a}#businessInsightsPage .mbi-trend-cards>div:nth-child(2) strong{color:#f04c24}#businessInsightsPage .mbi-trend-cards>div:nth-child(3) strong{color:#1673e6}#businessInsightsPage .mbi-table-head,#businessInsightsPage .mbi-table-row{display:grid;grid-template-columns:1.4fr .65fr 1fr;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid #edf0f3}#businessInsightsPage .mbi-table-head{font-size:12px;font-weight:1000;color:#667085}#businessInsightsPage .mbi-table-row{font-size:13px;font-weight:800}#businessInsightsPage .mbi-maid{display:flex;align-items:center;gap:9px}#businessInsightsPage .mbi-avatar{width:26px;height:26px;border-radius:50%;background:#1673e6;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:1000}#businessInsightsPage .mbi-time{display:inline-flex;min-width:72px;justify-content:center;padding:5px 9px;border-radius:8px;background:#eaf7ef;color:#0d8f4d}#businessInsightsPage .mbi-time.neutral{background:#fff6df;color:#d98600}#businessInsightsPage .mbi-time.down{background:#fff0f0;color:#e63b3b}#businessInsightsPage .mbi-thumb{font-size:20px!important;margin-left:10px;vertical-align:middle}.mbi-thumb.up{color:#0d8f4d!important}.mbi-thumb.neutral{color:#9ca3af!important}.mbi-thumb.down{color:#e63b3b!important}@media(max-width:1250px){#businessInsightsPage .mbi-kpi-five{grid-template-columns:repeat(3,1fr)}#businessInsightsPage .mbi-lower{grid-template-columns:1fr}}@media(max-width:760px){#businessInsightsPage .mbi-filters-two,#businessInsightsPage .mbi-kpi-five{grid-template-columns:1fr}#businessInsightsPage .mbi-kpi{min-height:120px}#businessInsightsPage .mbi-table{overflow-x:auto}#businessInsightsPage .mbi-table-head,#businessInsightsPage .mbi-table-row{min-width:620px}#businessInsightsPage .mbi-trend-cards{grid-template-columns:1fr}}
+
+
+/* Business Insights responsive containment and visual polish */
+html,body{max-width:100%;overflow-x:hidden}
+.app{grid-template-columns:242px minmax(0,1fr);max-width:100vw;overflow:hidden}
+.main{min-width:0;width:100%;max-width:100%;overflow-x:hidden}
+#businessInsightsPage{width:100%;max-width:100%;min-width:0;overflow-x:hidden;font-family:Nunito,Arial,sans-serif}
+#businessInsightsPage .hero,
+#businessInsightsPage .mbi-wrap{width:100%;max-width:100%;min-width:0}
+#businessInsightsPage .mbi-wrap{overflow:hidden}
+#businessInsightsPage .mbi-filters,
+#businessInsightsPage .mbi-kpi-grid,
+#businessInsightsPage .mbi-lower{width:100%;min-width:0}
+#businessInsightsPage .mbi-filters-two{grid-template-columns:minmax(240px,.85fr) minmax(280px,1.4fr)}
+#businessInsightsPage .mbi-kpi-five{grid-template-columns:repeat(5,minmax(0,1fr))}
+#businessInsightsPage .mbi-kpi{min-width:0;padding:18px 16px;border-radius:16px}
+#businessInsightsPage .mbi-kpi>div:last-child{min-width:0}
+#businessInsightsPage .mbi-kpi-title{font-size:13px;line-height:1.25;letter-spacing:.01em}
+#businessInsightsPage .mbi-kpi-number{font-size:clamp(28px,2.35vw,38px)}
+#businessInsightsPage .mbi-icon{width:54px;height:54px;border-radius:15px}
+#businessInsightsPage .mbi-icon .material-symbols-rounded{font-size:31px}
+#businessInsightsPage .mbi-compare{grid-template-columns:1fr;gap:3px}
+#businessInsightsPage .mbi-good{position:absolute;right:16px;bottom:16px}
+#businessInsightsPage .mbi-lower{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)}
+#businessInsightsPage .mbi-panel{min-width:0;max-width:100%;overflow:hidden}
+#businessInsightsPage .mbi-table{min-width:0}
+#businessInsightsPage .mbi-table-head,
+#businessInsightsPage .mbi-table-row{grid-template-columns:minmax(150px,1.35fr) minmax(80px,.65fr) minmax(150px,1fr);min-width:0}
+#businessInsightsPage .mbi-maid{min-width:0}
+#businessInsightsPage .mbi-line-chart{max-width:100%;min-width:0}
+@media(max-width:1450px){
+  #businessInsightsPage .mbi-kpi-five{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:1100px){
+  #businessInsightsPage .mbi-kpi-five{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #businessInsightsPage .mbi-lower{grid-template-columns:1fr}
+}
+@media(max-width:991px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  #businessInsightsPage .mbi-filters-two{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  #businessInsightsPage .mbi-filters-two,
+  #businessInsightsPage .mbi-kpi-five{grid-template-columns:1fr}
+  #businessInsightsPage .mbi-filter{height:58px;border-radius:12px}
+  #businessInsightsPage .mbi-kpi{min-height:112px}
+  #businessInsightsPage .mbi-panel{padding:15px 14px;border-radius:14px}
+  #businessInsightsPage .mbi-panel-title{font-size:17px}
+  #businessInsightsPage .mbi-table{overflow:visible}
+  #businessInsightsPage .mbi-table-head{display:none}
+  #businessInsightsPage .mbi-table-row{grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:12px 2px}
+  #businessInsightsPage .mbi-table-row>div:nth-child(3){grid-column:1/-1;display:flex;justify-content:space-between;align-items:center}
+  #businessInsightsPage .mbi-line-chart{height:230px;margin-left:26px;margin-right:4px}
+}
+@media(max-width:420px){
+  #businessInsightsPage .mbi-filters-two{grid-template-columns:minmax(0,1fr)}
+  #businessInsightsPage .mbi-value{font-size:14px;white-space:normal}
+  #businessInsightsPage .mbi-kpi{padding:15px 14px}
+}
