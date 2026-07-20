@@ -42,8 +42,9 @@ jobs:
           html = re.sub(r'patch-bi-tooltips\.css\?v=\d+', 'patch-bi-tooltips.css?v=6', html)
           html = re.sub(r'patch-bi-tooltips\.js\?v=\d+', 'patch-bi-tooltips.js?v=6', html)
           html = html.replace('patch-bi-label.js?v=1', 'patch-bi-label.js?v=2')
-          html = re.sub(r'patch-bi-modern\.css\?v=\d+', 'patch-bi-modern.css?v=12', html)
-          html = re.sub(r'patch-bi-modern\.js\?v=\d+', 'patch-bi-modern.js?v=12', html)
+          html = re.sub(r'patch-bi-modern\.css\?v=\d+', 'patch-bi-modern.css?v=13', html)
+          html = re.sub(r'patch-bi-modern\.js\?v=\d+', 'patch-bi-modern.js?v=13', html)
+          html = re.sub(r'patch-bi-search\.css\?v=\d+', 'patch-bi-search.css?v=1', html)
 
           for old in ['1','2','3','4']:
               html = html.replace(f'<script src="patch-bi-maid-image.js?v={old}" defer></script>\n', '')
@@ -60,8 +61,10 @@ jobs:
               html = html.replace('</head>', '<link rel="stylesheet" href="patch-roomtype-mini.css?v=10">\n<script src="patch-roomtype-mini.js?v=10" defer></script>\n</head>')
           if 'patch-bi-estimate.css?v=3' not in html:
               html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-estimate.css?v=3">\n<script src="patch-bi-estimate.js?v=3" defer></script>\n</head>')
-          if 'patch-bi-modern.css?v=12' not in html:
-              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-modern.css?v=12">\n<script src="patch-bi-modern.js?v=12" defer></script>\n</head>')
+          if 'patch-bi-modern.css?v=13' not in html:
+              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-modern.css?v=13">\n<script src="patch-bi-modern.js?v=13" defer></script>\n</head>')
+          if 'patch-bi-search.css?v=1' not in html:
+              html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-search.css?v=1">\n</head>')
           if 'patch-bi-tooltips.css?v=6' not in html:
               html = html.replace('</head>', '<link rel="stylesheet" href="patch-bi-tooltips.css?v=6">\n<script src="patch-bi-tooltips.js?v=6" defer></script>\n</head>')
           if 'patch-bi-label.js?v=2' not in html:
